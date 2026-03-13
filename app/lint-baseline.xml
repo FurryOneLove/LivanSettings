@@ -1,0 +1,2112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="WrongConstant"
+        message="Must be one or more of: Intent.FLAG_GRANT_READ_URI_PERMISSION, Intent.FLAG_GRANT_WRITE_URI_PERMISSION, Intent.FLAG_FROM_BACKGROUND, Intent.FLAG_DEBUG_LOG_RESOLUTION, Intent.FLAG_EXCLUDE_STOPPED_PACKAGES, Intent.FLAG_INCLUDE_STOPPED_PACKAGES, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION, Intent.FLAG_GRANT_PREFIX_URI_PERMISSION, Intent.FLAG_ACTIVITY_MATCH_EXTERNAL, Intent.FLAG_ACTIVITY_NO_HISTORY, Intent.FLAG_ACTIVITY_SINGLE_TOP, Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_MULTIPLE_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_FORWARD_RESULT, Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP, Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT, Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NEW_DOCUMENT, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NO_USER_ACTION, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT, Intent.FLAG_ACTIVITY_NO_ANIMATION, Intent.FLAG_ACTIVITY_CLEAR_TASK, Intent.FLAG_ACTIVITY_TASK_ON_HOME, Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS, Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT, Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER, Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, Intent.FLAG_RECEIVER_REGISTERED_ONLY, Intent.FLAG_RECEIVER_REPLACE_PENDING, Intent.FLAG_RECEIVER_FOREGROUND, Intent.FLAG_RECEIVER_NO_ABORT, Intent.FLAG_RECEIVER_VISIBLE_TO_INSTANT_APPS"
+        errorLine1="                flags = INTENT_FLAG_ACTIVITY_NEW_TASK"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="386"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one or more of: Intent.FLAG_GRANT_READ_URI_PERMISSION, Intent.FLAG_GRANT_WRITE_URI_PERMISSION, Intent.FLAG_FROM_BACKGROUND, Intent.FLAG_DEBUG_LOG_RESOLUTION, Intent.FLAG_EXCLUDE_STOPPED_PACKAGES, Intent.FLAG_INCLUDE_STOPPED_PACKAGES, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION, Intent.FLAG_GRANT_PREFIX_URI_PERMISSION, Intent.FLAG_ACTIVITY_MATCH_EXTERNAL, Intent.FLAG_ACTIVITY_NO_HISTORY, Intent.FLAG_ACTIVITY_SINGLE_TOP, Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_MULTIPLE_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_FORWARD_RESULT, Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP, Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT, Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NEW_DOCUMENT, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NO_USER_ACTION, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT, Intent.FLAG_ACTIVITY_NO_ANIMATION, Intent.FLAG_ACTIVITY_CLEAR_TASK, Intent.FLAG_ACTIVITY_TASK_ON_HOME, Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS, Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT, Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER, Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, Intent.FLAG_RECEIVER_REGISTERED_ONLY, Intent.FLAG_RECEIVER_REPLACE_PENDING, Intent.FLAG_RECEIVER_FOREGROUND, Intent.FLAG_RECEIVER_NO_ABORT, Intent.FLAG_RECEIVER_VISIBLE_TO_INSTANT_APPS"
+        errorLine1="                addFlags(INTENT_FLAG_ACTIVITY_CLEAR_TOP)"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="387"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one or more of: Intent.FLAG_GRANT_READ_URI_PERMISSION, Intent.FLAG_GRANT_WRITE_URI_PERMISSION, Intent.FLAG_FROM_BACKGROUND, Intent.FLAG_DEBUG_LOG_RESOLUTION, Intent.FLAG_EXCLUDE_STOPPED_PACKAGES, Intent.FLAG_INCLUDE_STOPPED_PACKAGES, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION, Intent.FLAG_GRANT_PREFIX_URI_PERMISSION, Intent.FLAG_ACTIVITY_MATCH_EXTERNAL, Intent.FLAG_ACTIVITY_NO_HISTORY, Intent.FLAG_ACTIVITY_SINGLE_TOP, Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_MULTIPLE_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_FORWARD_RESULT, Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP, Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT, Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NEW_DOCUMENT, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NO_USER_ACTION, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT, Intent.FLAG_ACTIVITY_NO_ANIMATION, Intent.FLAG_ACTIVITY_CLEAR_TASK, Intent.FLAG_ACTIVITY_TASK_ON_HOME, Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS, Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT, Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER, Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, Intent.FLAG_RECEIVER_REGISTERED_ONLY, Intent.FLAG_RECEIVER_REPLACE_PENDING, Intent.FLAG_RECEIVER_FOREGROUND, Intent.FLAG_RECEIVER_NO_ABORT, Intent.FLAG_RECEIVER_VISIBLE_TO_INSTANT_APPS"
+        errorLine1="            flags = INTENT_FLAG_ACTIVITY_NEW_TASK"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="404"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one or more of: Intent.FLAG_GRANT_READ_URI_PERMISSION, Intent.FLAG_GRANT_WRITE_URI_PERMISSION, Intent.FLAG_FROM_BACKGROUND, Intent.FLAG_DEBUG_LOG_RESOLUTION, Intent.FLAG_EXCLUDE_STOPPED_PACKAGES, Intent.FLAG_INCLUDE_STOPPED_PACKAGES, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION, Intent.FLAG_GRANT_PREFIX_URI_PERMISSION, Intent.FLAG_ACTIVITY_MATCH_EXTERNAL, Intent.FLAG_ACTIVITY_NO_HISTORY, Intent.FLAG_ACTIVITY_SINGLE_TOP, Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_MULTIPLE_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_FORWARD_RESULT, Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP, Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT, Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NEW_DOCUMENT, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NO_USER_ACTION, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT, Intent.FLAG_ACTIVITY_NO_ANIMATION, Intent.FLAG_ACTIVITY_CLEAR_TASK, Intent.FLAG_ACTIVITY_TASK_ON_HOME, Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS, Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT, Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER, Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, Intent.FLAG_RECEIVER_REGISTERED_ONLY, Intent.FLAG_RECEIVER_REPLACE_PENDING, Intent.FLAG_RECEIVER_FOREGROUND, Intent.FLAG_RECEIVER_NO_ABORT, Intent.FLAG_RECEIVER_VISIBLE_TO_INSTANT_APPS"
+        errorLine1="            addFlags(INTENT_FLAG_ACTIVITY_CLEAR_TOP)"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="405"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one or more of: Intent.FLAG_GRANT_READ_URI_PERMISSION, Intent.FLAG_GRANT_WRITE_URI_PERMISSION, Intent.FLAG_FROM_BACKGROUND, Intent.FLAG_DEBUG_LOG_RESOLUTION, Intent.FLAG_EXCLUDE_STOPPED_PACKAGES, Intent.FLAG_INCLUDE_STOPPED_PACKAGES, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION, Intent.FLAG_GRANT_PREFIX_URI_PERMISSION, Intent.FLAG_ACTIVITY_MATCH_EXTERNAL, Intent.FLAG_ACTIVITY_NO_HISTORY, Intent.FLAG_ACTIVITY_SINGLE_TOP, Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_MULTIPLE_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_FORWARD_RESULT, Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP, Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT, Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NEW_DOCUMENT, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NO_USER_ACTION, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT, Intent.FLAG_ACTIVITY_NO_ANIMATION, Intent.FLAG_ACTIVITY_CLEAR_TASK, Intent.FLAG_ACTIVITY_TASK_ON_HOME, Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS, Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT, Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER, Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, Intent.FLAG_RECEIVER_REGISTERED_ONLY, Intent.FLAG_RECEIVER_REPLACE_PENDING, Intent.FLAG_RECEIVER_FOREGROUND, Intent.FLAG_RECEIVER_NO_ABORT, Intent.FLAG_RECEIVER_VISIBLE_TO_INSTANT_APPS"
+        errorLine1="            flags = INTENT_FLAG_ACTIVITY_NEW_TASK"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="416"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one or more of: Intent.FLAG_GRANT_READ_URI_PERMISSION, Intent.FLAG_GRANT_WRITE_URI_PERMISSION, Intent.FLAG_FROM_BACKGROUND, Intent.FLAG_DEBUG_LOG_RESOLUTION, Intent.FLAG_EXCLUDE_STOPPED_PACKAGES, Intent.FLAG_INCLUDE_STOPPED_PACKAGES, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION, Intent.FLAG_GRANT_PREFIX_URI_PERMISSION, Intent.FLAG_ACTIVITY_MATCH_EXTERNAL, Intent.FLAG_ACTIVITY_NO_HISTORY, Intent.FLAG_ACTIVITY_SINGLE_TOP, Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_MULTIPLE_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_FORWARD_RESULT, Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP, Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT, Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NEW_DOCUMENT, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NO_USER_ACTION, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT, Intent.FLAG_ACTIVITY_NO_ANIMATION, Intent.FLAG_ACTIVITY_CLEAR_TASK, Intent.FLAG_ACTIVITY_TASK_ON_HOME, Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS, Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT, Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER, Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, Intent.FLAG_RECEIVER_REGISTERED_ONLY, Intent.FLAG_RECEIVER_REPLACE_PENDING, Intent.FLAG_RECEIVER_FOREGROUND, Intent.FLAG_RECEIVER_NO_ABORT, Intent.FLAG_RECEIVER_VISIBLE_TO_INSTANT_APPS"
+        errorLine1="            addFlags(INTENT_FLAG_ACTIVITY_CLEAR_TOP)"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="417"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one or more of: Intent.FLAG_GRANT_READ_URI_PERMISSION, Intent.FLAG_GRANT_WRITE_URI_PERMISSION, Intent.FLAG_FROM_BACKGROUND, Intent.FLAG_DEBUG_LOG_RESOLUTION, Intent.FLAG_EXCLUDE_STOPPED_PACKAGES, Intent.FLAG_INCLUDE_STOPPED_PACKAGES, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION, Intent.FLAG_GRANT_PREFIX_URI_PERMISSION, Intent.FLAG_ACTIVITY_MATCH_EXTERNAL, Intent.FLAG_ACTIVITY_NO_HISTORY, Intent.FLAG_ACTIVITY_SINGLE_TOP, Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_MULTIPLE_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_FORWARD_RESULT, Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP, Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT, Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NEW_DOCUMENT, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NO_USER_ACTION, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT, Intent.FLAG_ACTIVITY_NO_ANIMATION, Intent.FLAG_ACTIVITY_CLEAR_TASK, Intent.FLAG_ACTIVITY_TASK_ON_HOME, Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS, Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT, Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER, Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, Intent.FLAG_RECEIVER_REGISTERED_ONLY, Intent.FLAG_RECEIVER_REPLACE_PENDING, Intent.FLAG_RECEIVER_FOREGROUND, Intent.FLAG_RECEIVER_NO_ABORT, Intent.FLAG_RECEIVER_VISIBLE_TO_INSTANT_APPS"
+        errorLine1="            flags = INTENT_FLAG_ACTIVITY_NEW_TASK"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="445"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one or more of: Intent.FLAG_GRANT_READ_URI_PERMISSION, Intent.FLAG_GRANT_WRITE_URI_PERMISSION, Intent.FLAG_FROM_BACKGROUND, Intent.FLAG_DEBUG_LOG_RESOLUTION, Intent.FLAG_EXCLUDE_STOPPED_PACKAGES, Intent.FLAG_INCLUDE_STOPPED_PACKAGES, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION, Intent.FLAG_GRANT_PREFIX_URI_PERMISSION, Intent.FLAG_ACTIVITY_MATCH_EXTERNAL, Intent.FLAG_ACTIVITY_NO_HISTORY, Intent.FLAG_ACTIVITY_SINGLE_TOP, Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_MULTIPLE_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_FORWARD_RESULT, Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP, Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT, Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED, Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NEW_DOCUMENT, Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, Intent.FLAG_ACTIVITY_NO_USER_ACTION, Intent.FLAG_ACTIVITY_REORDER_TO_FRONT, Intent.FLAG_ACTIVITY_NO_ANIMATION, Intent.FLAG_ACTIVITY_CLEAR_TASK, Intent.FLAG_ACTIVITY_TASK_ON_HOME, Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS, Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT, Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER, Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, Intent.FLAG_RECEIVER_REGISTERED_ONLY, Intent.FLAG_RECEIVER_REPLACE_PENDING, Intent.FLAG_RECEIVER_FOREGROUND, Intent.FLAG_RECEIVER_NO_ABORT, Intent.FLAG_RECEIVER_VISIBLE_TO_INSTANT_APPS"
+        errorLine1="            addFlags(INTENT_FLAG_ACTIVITY_CLEAR_TOP)"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="446"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ProtectedPermissions"
+        message="Permission is only granted to system apps"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.MEDIA_CONTENT_CONTROL&quot; />"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="5"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="QueryPermissionsNeeded"
+        message="As of Android 11, this method no longer returns information about all apps; see https://g.co/dev/packagevisibility for details"
+        errorLine1="    val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/MainActivity.kt"
+            line="67"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="QueryPermissionsNeeded"
+        message="As of Android 11, this method no longer returns information about all apps; see https://g.co/dev/packagevisibility for details"
+        errorLine1="        val installedPackages = packageManager.getInstalledPackages(0)"
+        errorLine2="                                               ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/SplitScreenLauncher.kt"
+            line="283"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="RedundantLabel"
+        message="Redundant label can be removed"
+        errorLine1="            android:label=&quot;@string/app_name&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of Gradle than 8.13 is available: 8.14.3"
+        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/wrapper/gradle-wrapper.properties"
+            line="4"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core-ktx than 1.10.1 is available: 1.17.0"
+        errorLine1="coreKtx = &quot;1.10.1&quot;"
+        errorLine2="          ~~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/libs.versions.toml"
+            line="4"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.ext:junit than 1.1.5 is available: 1.3.0"
+        errorLine1="junitVersion = &quot;1.1.5&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/libs.versions.toml"
+            line="6"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.5.1 is available: 3.7.0"
+        errorLine1="espressoCore = &quot;3.5.1&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/libs.versions.toml"
+            line="7"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.6.1 is available: 2.9.4"
+        errorLine1="lifecycleRuntimeKtx = &quot;2.6.1&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/libs.versions.toml"
+            line="8"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.8.0 is available: 1.11.0"
+        errorLine1="activityCompose = &quot;1.8.0&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/libs.versions.toml"
+            line="9"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.00 is available: 2025.10.00"
+        errorLine1="composeBom = &quot;2024.09.00&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/libs.versions.toml"
+            line="10"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.2.20"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/libs.versions.toml"
+            line="3"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.2.20"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/Documents/livan/UpdateDeveloping/LivanSettings/gradle/libs.versions.toml"
+            line="3"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/ButtonSubmenu.kt"
+            line="52"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="SwitchIntDef"
+        message="Switch statement on an `int` with known associated constant missing case `PlaybackState.STATE_ERROR`, `PlaybackState.STATE_FAST_FORWARDING`, `PlaybackState.STATE_NONE`, `PlaybackState.STATE_REWINDING`, `PlaybackState.STATE_SKIPPING_TO_NEXT`, `PlaybackState.STATE_SKIPPING_TO_PREVIOUS`, `PlaybackState.STATE_SKIPPING_TO_QUEUE_ITEM`, `PlaybackState.STATE_STOPPED`"
+        errorLine1="        when (state) {"
+        errorLine2="        ~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/CarMediaController.kt"
+            line="181"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of `scheduleAtFixedRate` is strongly discouraged because it can lead to unexpected behavior when Android processes become cached (tasks may unexpectedly execute hundreds or thousands of times in quick succession when a process changes from cached to uncached); prefer using `scheduleWithFixedDelay`"
+        errorLine1="        volumeUpTask = executor.scheduleAtFixedRate({"
+        errorLine2="                       ^">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/VolumeController.kt"
+            line="52"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of `scheduleAtFixedRate` is strongly discouraged because it can lead to unexpected behavior when Android processes become cached (tasks may unexpectedly execute hundreds or thousands of times in quick succession when a process changes from cached to uncached); prefer using `scheduleWithFixedDelay`"
+        errorLine1="        volumeDownTask = executor.scheduleAtFixedRate({"
+        errorLine2="                         ^">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/VolumeController.kt"
+            line="89"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 28"
+        errorLine1="    private val mediaSessionManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/KeyActionExecutor.kt"
+            line="65"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 28"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/services/MainService.kt"
+            line="121"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 28"
+        errorLine1="        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/SplitScreenLauncher.kt"
+            line="50"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`.">
+        <location
+            file="src/main/res/mipmap-anydpi-v26"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `CarMediaController` which has field `context` pointing to `Context`); this is a memory leak"
+        errorLine1="        @Volatile"
+        errorLine2="        ^">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/CarMediaController.kt"
+            line="22"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.purple_200` appears to be unused"
+        errorLine1="    &lt;color name=&quot;purple_200&quot;>#FFBB86FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.purple_500` appears to be unused"
+        errorLine1="    &lt;color name=&quot;purple_500&quot;>#FF6200EE&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.purple_700` appears to be unused"
+        errorLine1="    &lt;color name=&quot;purple_700&quot;>#FF3700B3&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.teal_200` appears to be unused"
+        errorLine1="    &lt;color name=&quot;teal_200&quot;>#FF03DAC5&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.teal_700` appears to be unused"
+        errorLine1="    &lt;color name=&quot;teal_700&quot;>#FF018786&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.black` appears to be unused"
+        errorLine1="    &lt;color name=&quot;black&quot;>#FF000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.white` appears to be unused"
+        errorLine1="    &lt;color name=&quot;white&quot;>#FFFFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="9"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.save` appears to be unused"
+        errorLine1="    &lt;string name=&quot;save&quot;>Сохранить&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.function_id_menu` appears to be unused"
+        errorLine1="    &lt;string name=&quot;function_id_menu&quot;>Function ID меню&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.invalid_function_id` appears to be unused"
+        errorLine1="    &lt;string name=&quot;invalid_function_id&quot;>Неверный Function ID&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.invalid_value` appears to be unused"
+        errorLine1="    &lt;string name=&quot;invalid_value&quot;>Неверное значение&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="41"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.isSupportsSplitScreenMultiWindow` appears to be unused"
+        errorLine1="    &lt;string name=&quot;isSupportsSplitScreenMultiWindow&quot;>Поддержка разделения экрана&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive icon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive roundIcon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/FirstRunManager.kt"
+            line="33"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/FirstRunManager.kt"
+            line="43"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_MODE_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="23"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="40"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_MODE_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="51"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="62"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="68"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_HOME_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="79"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="90"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="96"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_HOME_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="107"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="118"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="124"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_MODE_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="141"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="152"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="158"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="172"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="178"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_MODE_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="195"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="206"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="212"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="226"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="232"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_HOME_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="249"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="260"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="266"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="280"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="286"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_HOME_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="303"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="314"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="320"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="334"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="340"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="355"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="361"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="375"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="381"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="395"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="401"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="415"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="421"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="436"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="442"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="456"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="462"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="476"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="482"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="496"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="502"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="517"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="523"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="537"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="543"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="557"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="563"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="577"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="583"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="598"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="604"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="618"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="624"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="638"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="644"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="658"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="664"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="679"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="685"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="699"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="705"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="719"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="725"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="739"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="745"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="760"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="766"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="780"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="786"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="800"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="806"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="820"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="826"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_TRACK_NEXT_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="843"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_TRACK_NEXT_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="856"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_TRACK_NEXT_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="863"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="874"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="880"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_TRACK_NEXT_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="890"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="901"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="907"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_TRACK_PREV_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="924"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_TRACK_PREV_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="937"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_TRACK_PREV_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="944"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="955"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="961"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_TRACK_PREV_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="971"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="982"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="988"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_MUTE_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1005"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_MUTE_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1018"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_MUTE_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1025"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1036"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1042"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_MUTE_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1052"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1063"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1069"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_CALL_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1086"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_CALL_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1099"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_CALL_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1106"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1117"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1123"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_CALL_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1133"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1144"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1150"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_TOUCH_MUTE_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1167"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_TOUCH_MUTE_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1180"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_TOUCH_MUTE_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1187"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1198"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1204"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_TOUCH_MUTE_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1214"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1225"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1231"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_TOUCH_POWER_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1248"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_TOUCH_POWER_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1261"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_TOUCH_POWER_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1268"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1279"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1285"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_TOUCH_POWER_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1295"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1306"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1312"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_MEDIA_PLAY_PAUSE_SHORT_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1329"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putString(KEY_MEDIA_PLAY_PAUSE_LONG_PRESS_ACTION_TYPE, actionType.name).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1342"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_MEDIA_PLAY_PAUSE_SHORT_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1349"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1360"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1366"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_MEDIA_PLAY_PAUSE_LONG_PRESS_REMAPPED, remapped).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1376"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1387"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1393"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1408"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1414"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1428"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1434"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1449"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1455"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1469"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1475"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putBoolean(KEY_WELCOME_LIGHT_ENABLED, enabled).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/SettingsManager.kt"
+            line="1486"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().putInt(KEY_SAVED_VALUE, value).apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/ru/who/livansetting/utils/WelcomeLightManager.kt"
+            line="220"
+            column="9"/>
+    </issue>
+
+</issues>
