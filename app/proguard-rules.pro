@@ -1,21 +1,22 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Сохраняем все классы и интерфейсы автомобильных API
+-keep class com.ecarx.xui.adaptapi.** { *; }
+-keep interface com.ecarx.xui.adaptapi.** { *; }
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keep class android.car.** { *; }
+-keep interface android.car.** { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Явно сохраняем классы, создаваемые через рефлексию
+-keep class com.ecarx.xui.adaptapi.car.impl.CarImpl {
+    public <init>(android.content.Context);
+}
+-keep class com.ecarx.xui.adaptapi.input.impl.InputImpl {
+    public <init>(android.content.Context);
+}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Сохраняем атрибуты для корректной работы рефлексии и аннотаций
+-keepattributes Signature, *Annotation*, InnerClasses, EnclosingMethod
+
+# Сохраняем имена методов в callback-интерфейсах, так как они могут вызываться из нативного кода (JNI) или других процессов
+-keepclassmembers interface * extends com.ecarx.xui.adaptapi.input.IKeyCallback {
+    <methods>;
+}

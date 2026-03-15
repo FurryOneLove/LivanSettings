@@ -1,4 +1,4 @@
-package ru.who.livansetting
+package ru.who.livansetting.data
 
 import android.content.Context
 import android.content.SharedPreferences

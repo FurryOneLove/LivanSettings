@@ -153,8 +153,6 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     val welcomeLightManager = remember { WelcomeLightManager(context) }
     var isWelcomeLightEnabled by remember { mutableStateOf(false) }
     
-    // Состояние для переключателя "Старый тип переключения"
-    var isOldMediaSwitchingEnabled by remember { mutableStateOf(false) }
     val sharedPreferences = remember { 
         context.getSharedPreferences("livan_settings", Context.MODE_PRIVATE) 
     }
@@ -187,12 +185,6 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         val welcomeLightState = welcomeLightManager.isWelcomeLightEnabled()
         isWelcomeLightEnabled = welcomeLightState ?: false
         Log.d("MainActivity", "Initial welcome light state: $welcomeLightState, UI state: $isWelcomeLightEnabled")
-        
-        // Инициализируем состояние переключателя "Старый тип переключения"
-        val carMediaController = CarMediaController.getInstance(context)
-        val currentAlgorithm = carMediaController.getMediaControlAlgorithm(sharedPreferences)
-        isOldMediaSwitchingEnabled = (currentAlgorithm == CarMediaController.ALGORITHM_KEY_EVENT)
-        Log.d("MainActivity", "Initial old media switching state: $isOldMediaSwitchingEnabled")
         
         // Инициализируем состояние выбора режима вождения
         val settingsManager = SettingsManager(context)
@@ -405,24 +397,6 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 )
             }
             
-            // Переключатель "Старый тип переключения"
-            item {
-                OldMediaSwitchingSwitchCard(
-                    isEnabled = isOldMediaSwitchingEnabled,
-                    onToggle = { enabled ->
-                        isOldMediaSwitchingEnabled = enabled
-                        val carMediaController = CarMediaController.getInstance(context)
-                        val algorithm = if (enabled) {
-                            CarMediaController.ALGORITHM_KEY_EVENT
-                        } else {
-                            CarMediaController.ALGORITHM_MEDIA_SESSION
-                        }
-                        carMediaController.setMediaControlAlgorithm(algorithm, sharedPreferences)
-                        Log.d("MainActivity", "Media switching algorithm changed to: ${carMediaController.getAlgorithmName(algorithm)}")
-                    }
-                )
-            }
-            
             // Выбор режима вождения
             item {
                 DriveModeSelectionCard(
@@ -513,40 +487,6 @@ fun WelcomeLightSwitchCard(
                 onCheckedChange = { checked ->
                     onToggle(!checked) // Инвертируем обратно при сохранении
                 }
-            )
-        }
-    }
-}
-
-@Composable
-fun OldMediaSwitchingSwitchCard(
-    isEnabled: Boolean,
-    onToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.old_media_switching),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.weight(1f)
-            )
-            
-            Switch(
-                checked = isEnabled,
-                onCheckedChange = onToggle
             )
         }
     }

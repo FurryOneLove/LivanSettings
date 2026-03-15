@@ -1,4 +1,4 @@
-package ru.who.livansetting.utils
+package ru.who.livansetting.features.keys
 
 import android.app.ActivityManager
 import android.content.Context
@@ -6,20 +6,23 @@ import android.content.Intent
 import android.media.AudioManager
 import android.util.Log
 import com.ecarx.xui.adaptapi.input.KeyCode
-import ru.who.livansetting.ButtonActionType
-import ru.who.livansetting.SettingsManager
-import ru.who.livansetting.constants.IICKeyCodes
+import ru.who.livansetting.data.ButtonActionType
+import ru.who.livansetting.data.SettingsManager
+import ru.who.livansetting.features.auto.DrlManager
+import ru.who.livansetting.features.auto.SeatHeatingManager
+import ru.who.livansetting.utils.CarMediaController
+import ru.who.livansetting.utils.MediaActionType
+import ru.who.livansetting.utils.VolumeController
+import ru.who.livansetting.utils.SplitScreenLauncher
 
 /**
  * Исполнитель действий при нажатии клавиш.
- * Использует декларативный подход для сопоставления кодов клавиш и настроек.
  */
 class KeyActionExecutor(private val context: Context) {
     
     companion object {
         private const val TAG = "KeyActionExecutor"
         
-        // ECARX Constants
         private const val ECARX_ACTION_POWER = "ecarx.intent.action.ECARX_KEY_POWER_EVENT"
         private const val ECARX_ACTION_RCALL = "ecarx.intent.action.ECARX_KEY_RCALL_EVENT"
         private const val ECARX_ACTION_RSRC = "ecarx.intent.action.ECARX_KEY_RSRC_EVENT"
@@ -30,9 +33,6 @@ class KeyActionExecutor(private val context: Context) {
         private const val SCREENSAVER_CATEGORY = "android.intent.category.SCREENSAVER"
         private const val SCREENSAVER_PACKAGE = "com.ecarx.screensaver"
         private const val SCREENSAVER_SERVICE = "com.ecarx.screensaver.ScreensaverService"
-
-        private const val FLAG_ACTIVITY_NEW_TASK = Intent.FLAG_ACTIVITY_NEW_TASK
-        private const val FLAG_ACTIVITY_CLEAR_TOP = Intent.FLAG_ACTIVITY_CLEAR_TOP
     }
     
     private val settingsManager = SettingsManager(context)
@@ -42,9 +42,6 @@ class KeyActionExecutor(private val context: Context) {
     private val seatHeatingManager = SeatHeatingManager(context)
     private val volumeController = VolumeController(context)
 
-    /**
-     * Карта сопоставления KeyCode -> Идентификатор кнопки в SettingsManager
-     */
     private val keyToButtonId = mapOf(
         KeyCode.KEYCODE_R_SRC to SettingsManager.BTN_MODE,
         KeyCode.KEYCODE_R_HOME to SettingsManager.BTN_HOME,
@@ -59,16 +56,11 @@ class KeyActionExecutor(private val context: Context) {
 
     fun handleKeyPressWithRemapping(keyCode: Int, isLongPress: Boolean) {
         val buttonId = keyToButtonId[keyCode] ?: run {
-            // Если кнопка не переназначаемая (например, громкость), выполняем действие по умолчанию
             executeDefaultAction(keyCode, isLongPress)
             return
         }
 
-        val action = "$buttonId ${if (isLongPress) "long" else "short"} press"
-        Log.d(TAG, "Handling $action")
-
-        val isRemapped = settingsManager.isButtonRemapped(buttonId, isLongPress)
-        if (!isRemapped) {
+        if (!settingsManager.isButtonRemapped(buttonId, isLongPress)) {
             executeDefaultAction(keyCode, isLongPress)
             return
         }
@@ -81,7 +73,7 @@ class KeyActionExecutor(private val context: Context) {
             ButtonActionType.TOGGLE_PASSENGER_SEAT_HEAT -> seatHeatingManager.togglePassengerSeatHeat()
             ButtonActionType.TOGGLE_MEDIA_PLAY_PAUSE -> carMediaController.performCurrentMediaSessionAction(MediaActionType.PLAY_PAUSE)
             ButtonActionType.DEFAULT_ACTION -> executeDefaultAction(keyCode, isLongPress)
-            ButtonActionType.NOTHING -> Log.d(TAG, "Action type NOTHING for $action")
+            ButtonActionType.NOTHING -> Log.d(TAG, "No action")
         }
     }
 
@@ -89,10 +81,10 @@ class KeyActionExecutor(private val context: Context) {
         when (keyCode) {
             KeyCode.KEYCODE_R_VOLUME_UP, IICKeyCodes.KEY_CODE_IIC_VOLUME_UP -> handleVolumeUp(isLongPress)
             KeyCode.KEYCODE_R_VOLUME_DOWN, IICKeyCodes.KEY_CODE_IIC_VOLUME_DOWN -> handleVolumeDown(isLongPress)
-            KeyCode.KEYCODE_R_VOLUME_MUTE, IICKeyCodes.KEY_CODE_IIC_MUTE -> handleMute(isLongPress)
-            KeyCode.KEYCODE_R_MEDIA_NEXT -> handleMediaNext()
-            KeyCode.KEYCODE_R_MEDIA_PREVIOUS -> handleMediaPrevious()
-            KeyCode.KEYCODE_R_MEDIA_PLAY_PAUSE -> handleMediaPlayPause()
+            KeyCode.KEYCODE_R_VOLUME_MUTE, IICKeyCodes.KEY_CODE_IIC_MUTE -> handleMute()
+            KeyCode.KEYCODE_R_MEDIA_NEXT -> handleMediaAction(MediaActionType.NEXT)
+            KeyCode.KEYCODE_R_MEDIA_PREVIOUS -> handleMediaAction(MediaActionType.PREVIOUS)
+            KeyCode.KEYCODE_R_MEDIA_PLAY_PAUSE -> handleMediaAction(MediaActionType.PLAY_PAUSE)
             KeyCode.KEYCODE_R_CALL -> handleCallDefault(isLongPress)
             KeyCode.KEYCODE_R_SRC -> handleRsrcDefault()
             KeyCode.KEYCODE_R_HOME -> handleHomeDefault()
@@ -100,108 +92,75 @@ class KeyActionExecutor(private val context: Context) {
         }
     }
 
-    // --- Action Implementations ---
-
     private fun launchAppForButton(buttonId: String, isLongPress: Boolean) {
-        val packageName = settingsManager.getButtonAppPackage(buttonId, isLongPress)
-        if (packageName != null) {
-            launchApp(packageName)
-        } else if (buttonId == SettingsManager.BTN_CALL) {
-            handleCallDefault(isLongPress)
-        }
-    }
-
-    private fun launchApp(packageName: String) {
-        try {
-            context.packageManager.getLaunchIntentForPackage(packageName)?.let {
-                it.addFlags(FLAG_ACTIVITY_NEW_TASK)
+        settingsManager.getButtonAppPackage(buttonId, isLongPress)?.let { pkg ->
+            context.packageManager.getLaunchIntentForPackage(pkg)?.let {
+                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(it)
-                Log.d(TAG, "Launched app: $packageName")
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error launching app: $packageName", e)
-        }
+        } ?: if (buttonId == SettingsManager.BTN_CALL) handleCallDefault(isLongPress) else Unit
     }
 
     private fun launchSplitScreenForButton(buttonId: String, isLongPress: Boolean) {
-        if (!SplitScreenLauncher.isSplitScreenSupported()) return
-        
-        val leftPkg = settingsManager.getButtonSplitAppPackage(buttonId, isLongPress, true)
-        val rightPkg = settingsManager.getButtonSplitAppPackage(buttonId, isLongPress, false)
-        
-        if (leftPkg != null && rightPkg != null) {
-            SplitScreenLauncher.launchSplitScreenModeByPackage(context, leftPkg, rightPkg)
-        }
+        val left = settingsManager.getButtonSplitAppPackage(buttonId, isLongPress, true)
+        val right = settingsManager.getButtonSplitAppPackage(buttonId, isLongPress, false)
+        if (left != null && right != null) SplitScreenLauncher.launchSplitScreenModeByPackage(context, left, right)
     }
 
-    private fun handleVolumeUp(isLongPress: Boolean) = if (isLongPress) volumeController.startVolumeUp() else volumeController.adjustVolumeUpOnce()
-    private fun handleVolumeDown(isLongPress: Boolean) = if (isLongPress) volumeController.startVolumeDown() else volumeController.adjustVolumeDownOnce()
-    
+    private fun handleVolumeUp(long: Boolean) = if (long) volumeController.startVolumeUp() else volumeController.adjustVolumeUpOnce()
+    private fun handleVolumeDown(long: Boolean) = if (long) volumeController.startVolumeDown() else volumeController.adjustVolumeDownOnce()
     fun handleVolumeUpRelease() = volumeController.stopVolumeUp()
     fun handleVolumeDownRelease() = volumeController.stopVolumeDown()
 
-    private fun handleMediaNext() = carMediaController.performCurrentMediaSessionAction(MediaActionType.NEXT)
-    private fun handleMediaPrevious() = carMediaController.performCurrentMediaSessionAction(MediaActionType.PREVIOUS)
-    private fun handleMediaPlayPause() = carMediaController.performCurrentMediaSessionAction(MediaActionType.PLAY_PAUSE)
+    private fun handleMediaAction(type: MediaActionType) = carMediaController.performCurrentMediaSessionAction(type)
 
-    private fun handleMute(isLongPress: Boolean) {
-        val isMuted = audioManager.isStreamMute(AudioManager.STREAM_MUSIC)
-        val action = if (isMuted) AudioManager.ADJUST_UNMUTE else AudioManager.ADJUST_MUTE
+    private fun handleMute() {
+        val action = if (audioManager.isStreamMute(AudioManager.STREAM_MUSIC)) AudioManager.ADJUST_UNMUTE else AudioManager.ADJUST_MUTE
         audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, action, AudioManager.FLAG_SHOW_UI)
     }
 
-    private fun handleCallDefault(isLongPress: Boolean) {
-        val actionType = if (isLongPress) 1 else 0
-        val intent = Intent(ECARX_ACTION_RCALL).apply {
+    private fun handleCallDefault(long: Boolean) {
+        context.sendBroadcast(Intent(ECARX_ACTION_RCALL).apply {
             addCategory(Intent.CATEGORY_DEFAULT)
             putExtra("ecarx.extra.ECARX_KEY_EVENT_TYPE", 200005)
-            putExtra("ecarx.extra.ECARX_KEY_ACTION_TYPE", actionType)
-            flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TOP
-        }
-        context.sendBroadcast(intent)
+            putExtra("ecarx.extra.ECARX_KEY_ACTION_TYPE", if (long) 1 else 0)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        })
     }
 
     private fun handleHomeDefault() {
-        val intent = Intent(Intent.ACTION_MAIN).apply {
+        context.startActivity(Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_HOME)
-            flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TOP
-        }
-        context.startActivity(intent)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        })
     }
 
     private fun handleRsrcDefault() {
-        context.sendBroadcast(Intent(ECARX_ACTION_QUIT_FULLSCREEN).apply { flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TOP })
-        context.sendBroadcast(Intent(ECARX_ACTION_VR_EXIT).apply { flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TOP })
-        
-        val intent = Intent(ECARX_ACTION_RSRC).apply {
+        context.sendBroadcast(Intent(ECARX_ACTION_QUIT_FULLSCREEN).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP })
+        context.sendBroadcast(Intent(ECARX_ACTION_VR_EXIT).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP })
+        context.sendBroadcast(Intent(ECARX_ACTION_RSRC).apply {
             addCategory(Intent.CATEGORY_DEFAULT)
             putExtra("ecarx.extra.ECARX_KEY_EVENT_TYPE", 210004)
-            flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TOP
-        }
-        context.sendBroadcast(intent)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        })
     }
 
     private fun handlePower() {
-        if (!isScreensaverServiceRunning()) {
+        if (!isScreensaverRunning()) {
             context.startService(Intent(SCREENSAVER_ACTION).apply { setPackage(SCREENSAVER_PACKAGE); addCategory(SCREENSAVER_CATEGORY) })
             return
         }
-        val intent = Intent(ECARX_ACTION_POWER).apply {
+        context.sendBroadcast(Intent(ECARX_ACTION_POWER).apply {
             addCategory(Intent.CATEGORY_DEFAULT)
             putExtra("ecarx.extra.ECARX_KEY_EVENT_TYPE", 26)
             putExtra("ecarx.extra.ECARX_KEY_ACTION_TYPE", 0)
-            flags = FLAG_ACTIVITY_NEW_TASK
-        }
-        context.sendBroadcast(intent)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        })
         context.startService(Intent(SCREENSAVER_ACTION).apply { setPackage(SCREENSAVER_PACKAGE); addCategory(SCREENSAVER_CATEGORY) })
     }
 
-    private fun isScreensaverServiceRunning(): Boolean {
+    private fun isScreensaverRunning(): Boolean {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         return am.getRunningServices(Int.MAX_VALUE).any { it.service.className == SCREENSAVER_SERVICE }
     }
-    
-    // Public methods for external usage
-    fun getDrlManager() = drlManager
-    fun getSeatHeatingManager() = seatHeatingManager
 }

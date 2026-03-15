@@ -8,18 +8,15 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.ACCESSIBILITY_SERVICE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.car.permission.CAR_VENDOR_EXTENSION" />
     <uses-permission android:name="android.car.permission.CAR_EXTERIOR_ENVIRONMENT" />
     <uses-permission android:name="android.car.permission.CAR_INFO" />
     
-    <!-- Разрешения для MediaSession API -->
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     
-    <!-- Разрешения для split screen режима согласно инструкции -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.MODIFY_SYSTEM_SETTINGS" />
 
@@ -39,80 +36,52 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LivanSetting">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.LivanSetting"
             android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".ButtonSettingsActivity"
+            android:name=".ui.ButtonSettingsActivity"
             android:exported="false"
             android:label="@string/button_settings_title"
             android:theme="@style/Theme.LivanSetting"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".ui.MainActivity" />
 
         <activity
-            android:name=".FunctionIdActivity"
-            android:exported="false"
-            android:label="@string/function_id_title"
-            android:theme="@style/Theme.LivanSetting"
-            android:parentActivityName=".MainActivity" />
-
-        <activity
-            android:name=".AutoWarmActivity"
+            android:name=".ui.AutoWarmActivity"
             android:exported="false"
             android:label="@string/auto_warm_settings"
             android:theme="@style/Theme.LivanSetting"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".ui.MainActivity" />
 
-        <activity
-            android:name=".SensorActivity"
-            android:exported="false"
-            android:label="@string/sensor_title"
-            android:theme="@style/Theme.LivanSetting"
-            android:parentActivityName=".MainActivity" />
-
-        <!-- BroadcastReceiver для автозапуска при загрузке системы -->
         <receiver
-            android:name=".BootReceiver"
+            android:name=".core.BootReceiver"
             android:enabled="true"
             android:exported="true"
             android:directBootAware="true">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-            </intent-filter>
-            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-            <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-                <action android:name="android.intent.action.MEDIA_EJECT" />
-                <action android:name="android.intent.action.MEDIA_REMOVED" />
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
-                <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
-                <data android:scheme="file" />
             </intent-filter>
         </receiver>
 
-
-        <!-- Главный сервис приложения -->
         <service
-            android:name=".services.MainService"
+            android:name=".core.MainService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />
 
-        <!-- NotificationListenerService для работы с MediaSession -->
         <service
-            android:name=".services.MediaNotificationListenerService"
+            android:name=".core.MediaNotificationListenerService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
@@ -122,5 +91,4 @@
         </service>
 
     </application>
-
 </manifest>
