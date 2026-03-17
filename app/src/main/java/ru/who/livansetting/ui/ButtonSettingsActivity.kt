@@ -74,7 +74,7 @@ fun ButtonSettingsScreen(
     var longPressSplitLeftApp by remember { mutableStateOf<AppInfo?>(null) }
     var longPressSplitRightApp by remember { mutableStateOf<AppInfo?>(null) }
     
-    val apps by remember { derivedStateOf { getInstalledApps(context).map { AppInfo(it.packageName, it.appName, it.icon) } } }
+    val apps by remember { derivedStateOf { getInstalledApps(context) } }
     
     val title = when (buttonType) {
         SettingsManager.BTN_MODE -> stringResource(R.string.mode_button)
@@ -90,16 +90,36 @@ fun ButtonSettingsScreen(
     }
 
     LaunchedEffect(buttonType) {
+        // Загрузка настроек короткого нажатия
         shortPressRemapped = settingsManager.isButtonRemapped(buttonType, false)
         shortPressActionType = settingsManager.getButtonActionType(buttonType, false)
+        
         settingsManager.getButtonAppPackage(buttonType, false)?.let { pkg ->
             selectedShortPressApp = AppInfo(pkg, settingsManager.getButtonAppName(buttonType, false) ?: "", null)
         }
         
+        settingsManager.getButtonSplitAppPackage(buttonType, false, true)?.let { pkg ->
+            shortPressSplitLeftApp = AppInfo(pkg, settingsManager.getButtonSplitAppName(buttonType, false, true) ?: "", null)
+        }
+        
+        settingsManager.getButtonSplitAppPackage(buttonType, false, false)?.let { pkg ->
+            shortPressSplitRightApp = AppInfo(pkg, settingsManager.getButtonSplitAppName(buttonType, false, false) ?: "", null)
+        }
+        
+        // Загрузка настроек длинного нажатия
         longPressRemapped = settingsManager.isButtonRemapped(buttonType, true)
         longPressActionType = settingsManager.getButtonActionType(buttonType, true)
+        
         settingsManager.getButtonAppPackage(buttonType, true)?.let { pkg ->
             selectedLongPressApp = AppInfo(pkg, settingsManager.getButtonAppName(buttonType, true) ?: "", null)
+        }
+        
+        settingsManager.getButtonSplitAppPackage(buttonType, true, true)?.let { pkg ->
+            longPressSplitLeftApp = AppInfo(pkg, settingsManager.getButtonSplitAppName(buttonType, true, true) ?: "", null)
+        }
+        
+        settingsManager.getButtonSplitAppPackage(buttonType, true, false)?.let { pkg ->
+            longPressSplitRightApp = AppInfo(pkg, settingsManager.getButtonSplitAppName(buttonType, true, false) ?: "", null)
         }
     }
     
@@ -142,4 +162,5 @@ fun getInstalledApps(context: Context): List<AppInfo> {
     return pm.getInstalledApplications(0)
         .filter { (it.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 }
         .map { AppInfo(it.packageName, pm.getApplicationLabel(it).toString(), pm.getApplicationIcon(it)) }
+        .sortedBy { it.appName }
 }
