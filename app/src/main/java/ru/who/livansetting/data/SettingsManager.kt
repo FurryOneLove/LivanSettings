@@ -43,11 +43,11 @@ class SettingsManager(context: Context) {
     }
 
     fun getButtonActionType(button: String, isLongPress: Boolean): ButtonActionType {
-        val actionType = prefs.getString(getFullKey(button, isLongPress, "action_type"), ButtonActionType.NOTHING.name)
+        val actionType = prefs.getString(getFullKey(button, isLongPress, "action_type"), ButtonActionType.DEFAULT_ACTION.name)
         return try {
-            ButtonActionType.valueOf(actionType ?: ButtonActionType.NOTHING.name)
+            ButtonActionType.valueOf(actionType ?: ButtonActionType.DEFAULT_ACTION.name)
         } catch (e: IllegalArgumentException) {
-            ButtonActionType.NOTHING
+            ButtonActionType.DEFAULT_ACTION
         }
     }
 

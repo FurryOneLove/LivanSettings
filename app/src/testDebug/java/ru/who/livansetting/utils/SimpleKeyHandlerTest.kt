@@ -11,7 +11,7 @@ import org.junit.Test
 class SimpleKeyHandlerTest {
 
     private val context = mockk<Context>(relaxed = true)
-    private val keyActionExecutor = mockk<KeyActionExecutor>(relaxed = true)
+    private val keyActionExecutor = mock<KeyActionExecutor>(relaxed = true)
     private lateinit var keyHandler: SimpleKeyHandler
 
     @Before
@@ -93,6 +93,28 @@ class SimpleKeyHandlerTest {
         // Должно обработаться только одно нажатие из-за debounce
         verify(exactly = 1) { 
             keyActionExecutor.handleKeyPressWithRemapping(keyCode, any<Boolean>())
+        }
+    }
+
+    @Test
+    fun `test duplicate release via primary guard does not double-fire action`() {
+        val keyCode = KeyCode.KEYCODE_R_MEDIA_NEXT
+
+        // Нажатие
+        keyHandler.handleKeyEvent(keyCode, 1)
+
+        // Первое отпускание — выполняет логику и удаляет keyCode из keyPressTimes
+        keyHandler.handleKeyEvent(keyCode, 0)
+
+        // Повторное отпускание через 10мс — остановлено первичной защитой (keyPressTimes[keyCode] ?: return),
+        // т.к. keyCode уже удалён. Debounce является дополнительной защитой от гонки двух
+        // concurrent release-событий внутри synchronized(lock), не воспроизводимой последовательно.
+        Thread.sleep(10)
+        keyHandler.handleKeyEvent(keyCode, 0)
+
+        // handleKeyPressWithRemapping с isLongPress=false должен быть вызван ровно один раз
+        verify(exactly = 1) {
+            keyActionExecutor.handleKeyPressWithRemapping(keyCode, false)
         }
     }
 

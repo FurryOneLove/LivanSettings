@@ -2,7 +2,7 @@ package ru.who.livansetting.features.auto
 
 import android.content.Context
 import android.util.Log
-import ru.who.livansetting.services.MainService
+import ru.who.livansetting.core.MainService
 
 /**
  * Менеджер для управления дневными ходовыми огнями (DRL)

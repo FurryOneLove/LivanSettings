@@ -3,8 +3,6 @@ package ru.who.livansetting.features.auto
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.ecarx.xui.adaptapi.car.vehicle.IVehicle
-import ru.who.livansetting.services.MainService
 
 /**
  * Менеджер для управления провожающим светом
@@ -16,12 +14,18 @@ class WelcomeLightManager(private val context: Context) {
         private const val WELCOME_LIGHT_FUNCTION_ID = 537134848
         private const val PREFS_NAME = "welcome_light_prefs"
         private const val KEY_SAVED_VALUE = "saved_value"
-        
+
+        // IVehicle constants inlined to avoid NoClassDefFoundError on emulator
+        private const val HOME_SAFE_LIGHT_VALUE_OFF = 0
+        private const val HOME_SAFE_LIGHT_VALUE_30S = 537134849
+        private const val HOME_SAFE_LIGHT_VALUE_60S = 537134850
+        private const val HOME_SAFE_LIGHT_VALUE_90S = 537134851
+
         private val WELCOME_LIGHT_VALUES = arrayOf(
-            IVehicle.HOME_SAFE_LIGHT_VALUE_OFF,
-            IVehicle.HOME_SAFE_LIGHT_VALUE_30S,
-            IVehicle.HOME_SAFE_LIGHT_VALUE_60S,
-            IVehicle.HOME_SAFE_LIGHT_VALUE_90S
+            HOME_SAFE_LIGHT_VALUE_OFF,
+            HOME_SAFE_LIGHT_VALUE_30S,
+            HOME_SAFE_LIGHT_VALUE_60S,
+            HOME_SAFE_LIGHT_VALUE_90S
         )
     }
     
@@ -40,7 +44,7 @@ class WelcomeLightManager(private val context: Context) {
         val currentValue = getWelcomeLightValue() ?: return
         val currentIndex = WELCOME_LIGHT_VALUES.indexOf(currentValue)
         if (currentIndex == -1) {
-            setWelcomeLightValue(IVehicle.HOME_SAFE_LIGHT_VALUE_OFF)
+            setWelcomeLightValue(HOME_SAFE_LIGHT_VALUE_OFF)
             return
         }
         val nextValue = WELCOME_LIGHT_VALUES[(currentIndex + 1) % WELCOME_LIGHT_VALUES.size]
@@ -49,18 +53,18 @@ class WelcomeLightManager(private val context: Context) {
     
     fun isWelcomeLightEnabled(): Boolean? {
         val value = getWelcomeLightValue()
-        return if (value != null) value != IVehicle.HOME_SAFE_LIGHT_VALUE_OFF else null
+        return if (value != null) value != HOME_SAFE_LIGHT_VALUE_OFF else null
     }
     
     fun disableWelcomeLightWithSave(): Boolean {
-        getWelcomeLightValue()?.takeIf { it != IVehicle.HOME_SAFE_LIGHT_VALUE_OFF }?.let {
+        getWelcomeLightValue()?.takeIf { it != HOME_SAFE_LIGHT_VALUE_OFF }?.let {
             prefs.edit().putInt(KEY_SAVED_VALUE, it).apply()
         }
-        return setWelcomeLightValue(IVehicle.HOME_SAFE_LIGHT_VALUE_OFF)
+        return setWelcomeLightValue(HOME_SAFE_LIGHT_VALUE_OFF)
     }
     
     fun enableWelcomeLightWithRestore(): Boolean {
-        val savedValue = prefs.getInt(KEY_SAVED_VALUE, IVehicle.HOME_SAFE_LIGHT_VALUE_30S)
+        val savedValue = prefs.getInt(KEY_SAVED_VALUE, HOME_SAFE_LIGHT_VALUE_30S)
         return setWelcomeLightValue(savedValue)
     }
 }

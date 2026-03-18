@@ -67,8 +67,8 @@ fun ButtonSettingsScreen(
     var longPressRemapped by remember { mutableStateOf(false) }
     var selectedShortPressApp by remember { mutableStateOf<AppInfo?>(null) }
     var selectedLongPressApp by remember { mutableStateOf<AppInfo?>(null) }
-    var shortPressActionType by remember { mutableStateOf(ButtonActionType.NOTHING) }
-    var longPressActionType by remember { mutableStateOf(ButtonActionType.NOTHING) }
+    var shortPressActionType by remember { mutableStateOf(ButtonActionType.DEFAULT_ACTION) }
+    var longPressActionType by remember { mutableStateOf(ButtonActionType.DEFAULT_ACTION) }
     var shortPressSplitLeftApp by remember { mutableStateOf<AppInfo?>(null) }
     var shortPressSplitRightApp by remember { mutableStateOf<AppInfo?>(null) }
     var longPressSplitLeftApp by remember { mutableStateOf<AppInfo?>(null) }
@@ -142,10 +142,36 @@ fun ButtonSettingsScreen(
             longPressSplitLeftApp = longPressSplitLeftApp,
             longPressSplitRightApp = longPressSplitRightApp,
             apps = apps,
-            onShortPressRemappedChange = { shortPressRemapped = it; settingsManager.setButtonRemapped(buttonType, false, it) },
-            onLongPressRemappedChange = { longPressRemapped = it; settingsManager.setButtonRemapped(buttonType, true, it) },
-            onShortPressActionTypeChange = { shortPressActionType = it; settingsManager.setButtonActionType(buttonType, false, it) },
-            onLongPressActionTypeChange = { longPressActionType = it; settingsManager.setButtonActionType(buttonType, true, it) },
+            onShortPressRemappedChange = { isRemapped ->
+                shortPressRemapped = isRemapped
+                settingsManager.setButtonRemapped(buttonType, false, isRemapped)
+                if (!isRemapped) {
+                    shortPressActionType = ButtonActionType.NOTHING
+                    settingsManager.setButtonActionType(buttonType, false, ButtonActionType.NOTHING)
+                }
+            },
+            onLongPressRemappedChange = { isRemapped ->
+                longPressRemapped = isRemapped
+                settingsManager.setButtonRemapped(buttonType, true, isRemapped)
+                if (!isRemapped) {
+                    longPressActionType = ButtonActionType.NOTHING
+                    settingsManager.setButtonActionType(buttonType, true, ButtonActionType.NOTHING)
+                }
+            },
+            onShortPressActionTypeChange = {
+                shortPressActionType = it
+                settingsManager.setButtonActionType(buttonType, false, it)
+                val remapped = it != ButtonActionType.NOTHING && it != ButtonActionType.DEFAULT_ACTION
+                shortPressRemapped = remapped
+                settingsManager.setButtonRemapped(buttonType, false, remapped)
+            },
+            onLongPressActionTypeChange = {
+                longPressActionType = it
+                settingsManager.setButtonActionType(buttonType, true, it)
+                val remapped = it != ButtonActionType.NOTHING && it != ButtonActionType.DEFAULT_ACTION
+                longPressRemapped = remapped
+                settingsManager.setButtonRemapped(buttonType, true, remapped)
+            },
             onShortPressAppSelected = { selectedShortPressApp = it; settingsManager.setButtonApp(buttonType, false, it) },
             onLongPressAppSelected = { selectedLongPressApp = it; settingsManager.setButtonApp(buttonType, true, it) },
             onShortPressSplitLeftAppSelected = { shortPressSplitLeftApp = it; settingsManager.setButtonSplitApp(buttonType, false, true, it) },

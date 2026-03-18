@@ -18,12 +18,23 @@ class MediaNotificationListenerService : NotificationListenerService() {
         private const val TAG = "MediaNotification"
         private const val NOTIFICATION_ID = 2
         private const val CHANNEL_ID = "media_channel"
+
+        @Volatile
+        private var instance: MediaNotificationListenerService? = null
+
+        fun getInstance(): MediaNotificationListenerService? = instance
     }
-    
+
     override fun onCreate() {
         super.onCreate()
+        instance = this
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, createNotification())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        instance = null
     }
     
     private fun createNotificationChannel() {

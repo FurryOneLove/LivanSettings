@@ -3,10 +3,8 @@ package ru.who.livansetting.features.auto
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import ru.who.livansetting.core.SensorService
-import ru.who.livansetting.core.CarService
-import com.ecarx.xui.adaptapi.car.sensor.ISensor
-import com.ecarx.xui.adaptapi.car.sensor.ISensorEvent
+import ru.who.livansetting.core.ISensorService
+import ru.who.livansetting.core.ICarService
 
 /**
  * Менеджер для управления автоматическим подогревом сидений
@@ -24,11 +22,16 @@ class AutoWarmManager(private val context: Context) {
         private const val KEY_PASSENGER_TIMEOUT_MINUTES = "passenger_timeout_minutes"
         
         private const val TEMPERATURE_CHECK_INTERVAL = 30000L
+
+        // eCarX ISensor/ISensorEvent constants inlined to avoid class loading on emulator
+        private const val SENSOR_TYPE_IGNITION_STATE = 2097408
+        private const val IGNITION_STATE_DRIVING = 2097415
+        private const val IGNITION_STATE_ACC = 2097412
     }
     
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    private var sensorService: SensorService? = null
-    private var carService: CarService? = null
+    private var sensorService: ISensorService? = null
+    private var carService: ICarService? = null
     private var isMonitoring = false
     private var temperatureCheckRunnable: Runnable? = null
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -38,7 +41,7 @@ class AutoWarmManager(private val context: Context) {
     private var isDriverHeatingActive = false
     private var isPassengerHeatingActive = false
     
-    fun initialize(sensorService: SensorService?, carService: CarService?) {
+    fun initialize(sensorService: ISensorService?, carService: ICarService?) {
         this.sensorService = sensorService
         this.carService = carService
     }
@@ -73,8 +76,8 @@ class AutoWarmManager(private val context: Context) {
         checkAutoWarmConditions()
         if (!isMonitoring) return
         
-        val ignitionState = sensorService?.getSensorLatestValue(ISensor.SENSOR_TYPE_IGNITION_STATE)
-        val isIgnitionOn = ignitionState == ISensorEvent.IGNITION_STATE_DRIVING || ignitionState == ISensorEvent.IGNITION_STATE_ACC
+        val ignitionState = sensorService?.getSensorLatestValue(SENSOR_TYPE_IGNITION_STATE)
+        val isIgnitionOn = ignitionState == IGNITION_STATE_DRIVING || ignitionState == IGNITION_STATE_ACC
         
         checkSeatHeating(true, isIgnitionOn)
         checkSeatHeating(false, isIgnitionOn)

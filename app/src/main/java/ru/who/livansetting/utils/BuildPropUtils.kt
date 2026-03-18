@@ -15,7 +15,7 @@ object BuildPropUtils {
         return try {
             val cls = Class.forName("android.os.SystemProperties")
             val method = cls.getMethod("get", String::class.java, String::class.java)
-            val result = method.invoke(cls, key, null) as String?
+            val result = method.invoke(cls, key, defaultValue) as String?
             
             if (result != null && result.isNotEmpty()) {
                 result

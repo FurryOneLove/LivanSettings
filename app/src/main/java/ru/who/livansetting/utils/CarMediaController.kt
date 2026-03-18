@@ -5,7 +5,7 @@ import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import android.os.Build
 import android.util.Log
-import ru.who.livansetting.services.MediaNotificationListenerService
+import ru.who.livansetting.core.MediaNotificationListenerService
 
 /**
  * Контроллер для управления медиа-воспроизведением в автомобиле через MediaSession API.

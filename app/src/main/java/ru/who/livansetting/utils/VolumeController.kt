@@ -40,7 +40,7 @@ class VolumeController(private val context: Context) {
     private val isVolumeDownContinuous = AtomicBoolean(false)
     
     // Время последнего изменения для debounce
-    private var lastVolumeChangeTime = 0L
+    @Volatile private var lastVolumeChangeTime = 0L
     
     /**
      * Начинает непрерывное увеличение громкости

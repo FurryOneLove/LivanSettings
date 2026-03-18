@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * Сервис для обработки показаний датчиков автомобиля
  */
-class SensorService(private val context: Context) {
+class SensorService(private val context: Context) : ISensorService {
     companion object {
         private const val TAG = "SensorService"
         private const val SENSOR_TYPE_TEMPERATURE_INDOOR = ISensor.SENSOR_TYPE_TEMPERATURE_AMBIENT
@@ -29,16 +29,18 @@ class SensorService(private val context: Context) {
         override fun onSensorValueChanged(sensorId: Int, value: Float) { onSensorChanged(sensorId, value) }
     }
     
-    fun initialize(sensor: ISensor) {
+    override fun initialize(sensor: Any) {
+        if (sensor !is ISensor) return
         this.sensor = sensor
         isInitialized = true
     }
     
-    fun connect() {
+    override fun connect() {
         if (!isInitialized || sensor == null || isConnected.get()) return
         try {
-            val registered = sensor?.registerListener(sensorListener, SENSOR_TYPE_TEMPERATURE_INDOOR) ?: false
-            if (registered) {
+            val tempRegistered = sensor?.registerListener(sensorListener, SENSOR_TYPE_TEMPERATURE_INDOOR) ?: false
+            val ignitionRegistered = sensor?.registerListener(sensorListener, ISensor.SENSOR_TYPE_IGNITION_STATE) ?: false
+            if (tempRegistered || ignitionRegistered) {
                 isConnected.set(true)
                 loadStartupValues()
             }
@@ -47,7 +49,7 @@ class SensorService(private val context: Context) {
         }
     }
     
-    fun disconnect() {
+    override fun disconnect() {
         if (!isConnected.get()) return
         try {
             sensor?.unregisterListener(sensorListener)
@@ -88,8 +90,8 @@ class SensorService(private val context: Context) {
         }
     }
     
-    fun isConnected(): Boolean = isConnected.get()
-    fun getSensorLatestValue(sensorId: Int): Int? {
+    override fun isConnected(): Boolean = isConnected.get()
+    override fun getSensorLatestValue(sensorId: Int): Int? {
         val value = sensor?.getSensorLatestValue(sensorId) ?: return null
         return when (value) {
             is Float -> value.toInt()
@@ -98,11 +100,11 @@ class SensorService(private val context: Context) {
         }
     }
     
-    fun setIgnitionStateChangeCallback(callback: ((Int) -> Unit)?) {
+    override fun setIgnitionStateChangeCallback(callback: ((Int) -> Unit)?) {
         ignitionStateChangeCallback = callback
     }
     
-    fun cleanup() {
+    override fun cleanup() {
         disconnect()
         isInitialized = false
     }

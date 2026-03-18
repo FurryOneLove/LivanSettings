@@ -103,7 +103,7 @@ private fun PressSegment(
                     Icon(Icons.Default.ArrowDropDown, null)
                 }
                 DropdownMenu(expanded = expandedActionType, onDismissRequest = { expandedActionType = false }) {
-                    ButtonActionType.values().forEach { type ->
+                    ButtonActionType.entries.forEach { type ->
                         if (type == ButtonActionType.TOGGLE_DRL && BuildPropUtils.shouldHideDrlAction()) return@forEach
                         DropdownMenuItem(
                             text = { Text(getActionTypeName(type)) },
@@ -136,7 +136,9 @@ private fun getActionTypeName(type: ButtonActionType): String {
         ButtonActionType.TOGGLE_DRIVER_SEAT_HEAT -> stringResource(R.string.action_toggle_driver_seat_heat)
         ButtonActionType.TOGGLE_PASSENGER_SEAT_HEAT -> stringResource(R.string.action_toggle_passenger_seat_heat)
         ButtonActionType.TOGGLE_MEDIA_PLAY_PAUSE -> stringResource(R.string.action_toggle_media_play_pause)
-        ButtonActionType.DEFAULT_ACTION -> "Действие по умолчанию"
+        ButtonActionType.TOGGLE_MEDIA_NEXT -> stringResource(R.string.action_toggle_media_next)
+        ButtonActionType.TOGGLE_MEDIA_PREVIOUS -> stringResource(R.string.action_toggle_media_previous)
+        ButtonActionType.DEFAULT_ACTION -> stringResource(R.string.action_default)
     }
 }
 

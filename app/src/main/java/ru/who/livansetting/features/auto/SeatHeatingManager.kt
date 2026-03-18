@@ -2,8 +2,7 @@ package ru.who.livansetting.features.auto
 
 import android.content.Context
 import android.util.Log
-import com.ecarx.xui.adaptapi.car.base.ICarFunction
-import ru.who.livansetting.services.MainService
+import ru.who.livansetting.core.MainService
 
 /**
  * Менеджер для управления подогревом сидений
