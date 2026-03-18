@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application android:name=".DebugApplication">
+        <receiver
+            android:name=".core.DebugKeyTestReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ru.who.livansetting.action.DEBUG_SIMULATE_KEY" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

@@ -15,11 +15,22 @@ class DrlManager(private val context: Context) {
         private const val DRL_STATE_ON = 1
     }
 
+    private var lastKnownDrlState: Int? = null
+
+    @Synchronized
     fun toggleDrl() {
-        val carService = MainService.getInstance()?.getCarService() ?: return
-        val currentStatus = carService.getFunctionValue(DRL_FUNCTION_ID) ?: DRL_STATE_ON
+        val carService = MainService.getInstance()?.getCarService() ?: run {
+            Log.w(TAG, "DRL toggle skipped: carService not available")
+            return
+        }
+        val liveState = carService.getFunctionValue(DRL_FUNCTION_ID)
+        val currentStatus = liveState ?: (lastKnownDrlState ?: DRL_STATE_OFF)
         val nextStatus = if (currentStatus == DRL_STATE_ON) DRL_STATE_OFF else DRL_STATE_ON
-        carService.setFunctionValue(DRL_FUNCTION_ID, nextStatus)
-        Log.d(TAG, "DRL toggled to: $nextStatus")
+        if (carService.setFunctionValue(DRL_FUNCTION_ID, nextStatus)) {
+            lastKnownDrlState = nextStatus
+            Log.d(TAG, "DRL toggled to: $nextStatus (liveState=$liveState)")
+        } else {
+            Log.w(TAG, "DRL setFunctionValue failed (liveState=$liveState)")
+        }
     }
 }
