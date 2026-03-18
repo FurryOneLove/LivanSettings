@@ -53,13 +53,6 @@ class MainService : Service() {
         @Volatile
         private var isSystemJustBooted = true
 
-        @Volatile
-        var debugCarOverride: ICarService? = null
-        @Volatile
-        var debugI2cOverride: II2CService? = null
-        @Volatile
-        var debugSensorOverride: ISensorService? = null
-
         fun getInstance(): MainService? = instance
 
         fun startService(context: Context) {
@@ -73,12 +66,6 @@ class MainService : Service() {
         }
 
         fun isSystemBootComplete(): Boolean = isSystemBootComplete
-
-        fun setDebugServiceOverrides(car: ICarService, i2c: II2CService, sensor: ISensorService) {
-            debugCarOverride = car
-            debugI2cOverride = i2c
-            debugSensorOverride = sensor
-        }
     }
 
     override fun onCreate() {
@@ -124,9 +111,9 @@ class MainService : Service() {
             Log.e(TAG, "KeyActionExecutor init error (eCarX classes unavailable)", e)
         }
 
-        i2cService = debugI2cOverride ?: I2CService(this)
-        carService = debugCarOverride ?: CarService(this)
-        sensorService = debugSensorOverride ?: SensorService(this)
+        i2cService = I2CService(this)
+        carService = CarService(this)
+        sensorService = SensorService(this)
         autoWarmManager = AutoWarmManager(this)
     }
 
