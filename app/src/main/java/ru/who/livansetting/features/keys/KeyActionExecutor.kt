@@ -143,7 +143,7 @@ class KeyActionExecutor(
 
     private fun handleCallDefault(long: Boolean) {
         context.sendBroadcast(Intent(ECARX_ACTION_RCALL).apply {
-            addCategory(Intent.CATEGORY_DEFAULT)
+            setPackage("com.ecarx.btphone")
             putExtra("ecarx.extra.ECARX_KEY_EVENT_TYPE", 200005)
             putExtra("ecarx.extra.ECARX_KEY_ACTION_TYPE", if (long) 1 else 0)
         })

@@ -146,16 +146,16 @@ fun ButtonSettingsScreen(
                 shortPressRemapped = isRemapped
                 settingsManager.setButtonRemapped(buttonType, false, isRemapped)
                 if (!isRemapped) {
-                    shortPressActionType = ButtonActionType.NOTHING
-                    settingsManager.setButtonActionType(buttonType, false, ButtonActionType.NOTHING)
+                    shortPressActionType = ButtonActionType.DEFAULT_ACTION
+                    settingsManager.setButtonActionType(buttonType, false, ButtonActionType.DEFAULT_ACTION)
                 }
             },
             onLongPressRemappedChange = { isRemapped ->
                 longPressRemapped = isRemapped
                 settingsManager.setButtonRemapped(buttonType, true, isRemapped)
                 if (!isRemapped) {
-                    longPressActionType = ButtonActionType.NOTHING
-                    settingsManager.setButtonActionType(buttonType, true, ButtonActionType.NOTHING)
+                    longPressActionType = ButtonActionType.DEFAULT_ACTION
+                    settingsManager.setButtonActionType(buttonType, true, ButtonActionType.DEFAULT_ACTION)
                 }
             },
             onShortPressActionTypeChange = {

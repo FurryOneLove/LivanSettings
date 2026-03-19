@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import ru.who.livansetting.data.MigrationManager
 import ru.who.livansetting.data.SettingsManager
 import ru.who.livansetting.data.DriveModeSelection
 import ru.who.livansetting.features.keys.SimpleKeyHandler
@@ -51,7 +52,7 @@ class MainService : Service() {
         @Volatile
         private var isMainServiceStarted = false
         @Volatile
-        private var isSystemJustBooted = true
+        private var isSystemJustBooted = false
 
         fun getInstance(): MainService? = instance
 
@@ -101,6 +102,7 @@ class MainService : Service() {
 
     private fun initializeComponents() {
         settingsManager = SettingsManager(this)
+        MigrationManager.runIfNeeded(settingsManager!!)
         drlManager = DrlManager(this)
         seatHeatingManager = SeatHeatingManager(this)
 
@@ -175,18 +177,21 @@ class MainService : Service() {
         return java.lang.reflect.Proxy.newProxyInstance(
             callbackClass.classLoader,
             arrayOf(callbackClass)
-        ) { _, method, args ->
+        ) { proxy, method, args ->
             when (method.name) {
                 "onKeyPressed" -> {
                     val keyCode = args[0] as Int
                     simpleKeyHandler?.handleKeyEvent(keyCode, 1)
-                    true
+                    false
                 }
                 "onKeyReleased" -> {
                     val keyCode = args[0] as Int
                     simpleKeyHandler?.handleKeyEvent(keyCode, 0)
-                    true
+                    false
                 }
+                "hashCode" -> System.identityHashCode(proxy)
+                "equals" -> proxy === args?.get(0)
+                "toString" -> "IKeyCallback@${Integer.toHexString(System.identityHashCode(proxy))}"
                 else -> null
             }
         }
@@ -221,7 +226,7 @@ class MainService : Service() {
     }
 
     private fun checkAndStartAutoWarmManager() {
-        if (isSystemBootComplete && isMainServiceStarted && sensorService?.isConnected() == true) {
+        if (sensorService?.isConnected() == true) {
             autoWarmManager?.initialize(sensorService, carService)
             autoWarmManager?.startMonitoring()
         }

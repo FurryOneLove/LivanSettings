@@ -1,10 +1,12 @@
 package ru.who.livansetting.utils
 
 import android.content.Context
+import android.media.AudioManager
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import android.os.Build
 import android.util.Log
+import android.view.KeyEvent
 import ru.who.livansetting.core.MediaNotificationListenerService
 
 /**
@@ -25,6 +27,8 @@ class CarMediaController private constructor(private val context: Context) {
         }
     }
     
+    private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
     private val mediaSessionManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         context.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
     } else {
@@ -38,7 +42,7 @@ class CarMediaController private constructor(private val context: Context) {
         try {
             if (MediaNotificationListenerService.getInstance() == null) {
                 Log.w(TAG, "MediaNotificationListenerService is not running")
-                return false
+                return dispatchMediaKeyFallback(actionType)
             }
             
             val componentName = android.content.ComponentName(context, MediaNotificationListenerService::class.java)
@@ -81,6 +85,23 @@ class CarMediaController private constructor(private val context: Context) {
         }
     }
     
+    private fun dispatchMediaKeyFallback(actionType: MediaActionType): Boolean {
+        val keyCode = when (actionType) {
+            MediaActionType.PLAY_PAUSE -> KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
+            MediaActionType.NEXT -> KeyEvent.KEYCODE_MEDIA_NEXT
+            MediaActionType.PREVIOUS -> KeyEvent.KEYCODE_MEDIA_PREVIOUS
+        }
+        return try {
+            Log.d(TAG, "MediaSession unavailable, using AudioManager fallback for $actionType")
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, keyCode))
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, keyCode))
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "AudioManager fallback failed for $actionType", e)
+            false
+        }
+    }
+
     private fun executeMediaAction(mediaController: MediaController, actionType: MediaActionType): Boolean {
         return try {
             val controls = mediaController.transportControls

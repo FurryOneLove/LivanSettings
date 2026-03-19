@@ -23,6 +23,7 @@ class I2CService(private val context: Context) : II2CService {
     private var keyEventHandler: ((Int, Boolean) -> Unit)? = null
     private var isInitialized = false
     @Volatile private var isListenerRegistered = false
+    @Volatile private var previousData: IntArray? = null
 
     override fun initialize() {
         try {
@@ -61,54 +62,30 @@ class I2CService(private val context: Context) : II2CService {
     }
 
     private fun processKeyData(data: IntArray) {
-        val flavor601 = BuildPropUtils.isFlavorContains("601")
+        synchronized(this) {
+            val prev = previousData
+            val flavor601 = BuildPropUtils.isFlavorContains("601")
 
-        // Volume Up
-        if (!flavor601 && data.size > IICKeyCodes.IIC_DATA_INDEX_VOLUME_UP) {
-            if ((data[IICKeyCodes.IIC_DATA_INDEX_VOLUME_UP] and IICKeyCodes.IIC_PRESS_MASK) != 0) {
-                Log.d(TAG, "I2C key event: keyCode=${IICKeyCodes.KEY_CODE_IIC_VOLUME_UP} isRelease=false")
-                handleKey(IICKeyCodes.KEY_CODE_IIC_VOLUME_UP, false)
+            fun checkButton(index: Int, keyCode: Int, skip: Boolean = false) {
+                if (skip) return
+                if (data.size <= index) return
+                val cur = data[index]
+                val pre = if (prev != null && prev.size > index) prev[index] else 0
+                if (cur != 0 && pre == 0) {
+                    Log.d(TAG, "I2C key event: keyCode=$keyCode isRelease=false")
+                    handleKey(keyCode, false)
+                } else if (cur == 0 && pre != 0) {
+                    Log.d(TAG, "I2C key event: keyCode=$keyCode isRelease=true")
+                    handleKey(keyCode, true)
+                }
             }
-            if ((data[IICKeyCodes.IIC_DATA_INDEX_VOLUME_UP] and IICKeyCodes.IIC_RELEASE_MASK) != 0) {
-                Log.d(TAG, "I2C key event: keyCode=${IICKeyCodes.KEY_CODE_IIC_VOLUME_UP} isRelease=true")
-                handleKey(IICKeyCodes.KEY_CODE_IIC_VOLUME_UP, true)
-            }
-        }
 
-        // Mute
-        if (data.size > IICKeyCodes.IIC_DATA_INDEX_MUTE) {
-            if ((data[IICKeyCodes.IIC_DATA_INDEX_MUTE] and IICKeyCodes.IIC_PRESS_MASK) != 0) {
-                Log.d(TAG, "I2C key event: keyCode=${IICKeyCodes.KEY_CODE_IIC_MUTE} isRelease=false")
-                handleKey(IICKeyCodes.KEY_CODE_IIC_MUTE, false)
-            }
-            if ((data[IICKeyCodes.IIC_DATA_INDEX_MUTE] and IICKeyCodes.IIC_RELEASE_MASK) != 0) {
-                Log.d(TAG, "I2C key event: keyCode=${IICKeyCodes.KEY_CODE_IIC_MUTE} isRelease=true")
-                handleKey(IICKeyCodes.KEY_CODE_IIC_MUTE, true)
-            }
-        }
+            checkButton(IICKeyCodes.IIC_DATA_INDEX_VOLUME_UP, IICKeyCodes.KEY_CODE_IIC_VOLUME_UP, skip = flavor601)
+            checkButton(IICKeyCodes.IIC_DATA_INDEX_MUTE, IICKeyCodes.KEY_CODE_IIC_MUTE)
+            checkButton(IICKeyCodes.IIC_DATA_INDEX_VOLUME_DOWN, IICKeyCodes.KEY_CODE_IIC_VOLUME_DOWN, skip = flavor601)
+            checkButton(IICKeyCodes.IIC_DATA_INDEX_POWER, IICKeyCodes.KEY_CODE_IIC_POWER)
 
-        // Volume Down
-        if (!flavor601 && data.size > IICKeyCodes.IIC_DATA_INDEX_VOLUME_DOWN) {
-            if ((data[IICKeyCodes.IIC_DATA_INDEX_VOLUME_DOWN] and IICKeyCodes.IIC_PRESS_MASK) != 0) {
-                Log.d(TAG, "I2C key event: keyCode=${IICKeyCodes.KEY_CODE_IIC_VOLUME_DOWN} isRelease=false")
-                handleKey(IICKeyCodes.KEY_CODE_IIC_VOLUME_DOWN, false)
-            }
-            if ((data[IICKeyCodes.IIC_DATA_INDEX_VOLUME_DOWN] and IICKeyCodes.IIC_RELEASE_MASK) != 0) {
-                Log.d(TAG, "I2C key event: keyCode=${IICKeyCodes.KEY_CODE_IIC_VOLUME_DOWN} isRelease=true")
-                handleKey(IICKeyCodes.KEY_CODE_IIC_VOLUME_DOWN, true)
-            }
-        }
-
-        // Power
-        if (data.size > IICKeyCodes.IIC_DATA_INDEX_POWER) {
-            if ((data[IICKeyCodes.IIC_DATA_INDEX_POWER] and IICKeyCodes.IIC_PRESS_MASK) != 0) {
-                Log.d(TAG, "I2C key event: keyCode=${IICKeyCodes.KEY_CODE_IIC_POWER} isRelease=false")
-                handleKey(IICKeyCodes.KEY_CODE_IIC_POWER, false)
-            }
-            if ((data[IICKeyCodes.IIC_DATA_INDEX_POWER] and IICKeyCodes.IIC_RELEASE_MASK) != 0) {
-                Log.d(TAG, "I2C key event: keyCode=${IICKeyCodes.KEY_CODE_IIC_POWER} isRelease=true")
-                handleKey(IICKeyCodes.KEY_CODE_IIC_POWER, true)
-            }
+            previousData = data.copyOf()
         }
     }
 
@@ -117,6 +94,7 @@ class I2CService(private val context: Context) : II2CService {
     }
 
     override fun release() {
+        previousData = null
         isInitialized = false
         isListenerRegistered = false
         i2cCommunication = null
