@@ -68,25 +68,23 @@ class SimpleKeyHandler(
             processedLongPresses.remove(keyCode)
             keyPressTimes[keyCode] = currentTime
             lastProcessedTime[keyCode] = currentTime
-        }
 
-        if (isShortPressOnlyKey(keyCode)) return
-
-        Log.d(TAG, "Long-press scheduled for keyCode=$keyCode")
-        synchronized(lock) {
-            longPressFutures[keyCode] = executor.schedule({
-                val shouldExecute = synchronized(lock) {
-                    if (keyPressTimes[keyCode] != null) {
-                        processedLongPresses.add(keyCode)
-                        true
-                    } else {
-                        false
+            if (!isShortPressOnlyKey(keyCode)) {
+                Log.d(TAG, "Long-press scheduled for keyCode=$keyCode")
+                longPressFutures[keyCode] = executor.schedule({
+                    val shouldExecute = synchronized(lock) {
+                        if (keyPressTimes[keyCode] != null) {
+                            processedLongPresses.add(keyCode)
+                            true
+                        } else {
+                            false
+                        }
                     }
-                }
-                if (shouldExecute) {
-                    keyActionExecutor.handleKeyPressWithRemapping(keyCode, true)
-                }
-            }, LONG_PRESS_DURATION, TimeUnit.MILLISECONDS)
+                    if (shouldExecute) {
+                        keyActionExecutor.handleKeyPressWithRemapping(keyCode, true)
+                    }
+                }, LONG_PRESS_DURATION, TimeUnit.MILLISECONDS)
+            }
         }
     }
 
@@ -96,11 +94,6 @@ class SimpleKeyHandler(
         val isLongPress: Boolean
 
         synchronized(lock) {
-            val lastTime = lastProcessedTime[keyCode] ?: 0
-            if (currentTime - lastTime < DEBOUNCE_DURATION) {
-                Log.d(TAG, "Debounce rejected release for keyCode=$keyCode")
-                return
-            }
             pressTime = keyPressTimes[keyCode] ?: return
             longPressFutures[keyCode]?.cancel(false)
             isLongPress = processedLongPresses.contains(keyCode)
@@ -136,7 +129,6 @@ class SimpleKeyHandler(
             keyPressTimes.remove(keyCode)
             longPressFutures.remove(keyCode)
             processedLongPresses.remove(keyCode)
-            lastProcessedTime[keyCode] = currentTime
         }
     }
 

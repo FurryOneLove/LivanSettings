@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.ecarx.xui.adaptapi.input.KeyCode
 import io.mockk.*
+import ru.who.livansetting.features.keys.KeyActionExecutor
+import ru.who.livansetting.features.keys.SimpleKeyHandler
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +13,7 @@ import org.junit.Test
 class SimpleKeyHandlerTest {
 
     private val context = mockk<Context>(relaxed = true)
-    private val keyActionExecutor = mock<KeyActionExecutor>(relaxed = true)
+    private val keyActionExecutor = mockk<KeyActionExecutor>(relaxed = true)
     private lateinit var keyHandler: SimpleKeyHandler
 
     @Before
@@ -90,7 +92,7 @@ class SimpleKeyHandlerTest {
         keyHandler.handleKeyEvent(keyCode, 1)
         keyHandler.handleKeyEvent(keyCode, 0)
         
-        // Должно обработаться только одно нажатие из-за debounce
+        // Должно обработаться только одно нажатие: второй press отклонён debounce на press-событиях
         verify(exactly = 1) { 
             keyActionExecutor.handleKeyPressWithRemapping(keyCode, any<Boolean>())
         }
@@ -128,5 +130,19 @@ class SimpleKeyHandlerTest {
         
         // Должен быть вызван метод отпускания для остановки изменения громкости
         verify { keyActionExecutor.handleVolumeUpRelease() }
+    }
+
+    @Test
+    fun `test immediate release after press is not debounced`() {
+        val keyCode = KeyCode.KEYCODE_R_MEDIA_NEXT
+
+        // Нажатие и немедленное отпускание (< 50ms) — не должно блокироваться debounce
+        keyHandler.handleKeyEvent(keyCode, 1)
+        keyHandler.handleKeyEvent(keyCode, 0)
+
+        // Короткое нажатие должно выполниться
+        verify(exactly = 1) {
+            keyActionExecutor.handleKeyPressWithRemapping(keyCode, false)
+        }
     }
 }
