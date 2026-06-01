@@ -140,4 +140,6 @@
     <string name="drive_mode_comfort">Комфорт</string>
     <string name="drive_mode_eco">Эко</string>
     <string name="action_default">Действие по умолчанию</string>
+    <string name="action_send_intent">Отправить интент</string>
+    <string name="select_intent">Выберите интент</string>
 </resources>

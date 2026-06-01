@@ -5,10 +5,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import ru.who.livansetting.data.MigrationManager
@@ -20,6 +24,7 @@ import ru.who.livansetting.features.auto.AutoWarmManager
 import ru.who.livansetting.features.auto.DrlManager
 import ru.who.livansetting.features.auto.SeatHeatingManager
 import ru.who.livansetting.ui.MainActivity
+import ru.who.livansetting.utils.VolumeController
 
 /**
  * Главный сервис приложения, объединяющий все функциональности
@@ -31,6 +36,7 @@ class MainService : Service() {
     private var settingsManager: SettingsManager? = null
     private var simpleKeyHandler: SimpleKeyHandler? = null
     private var keyActionExecutor: KeyActionExecutor? = null
+    private var volumeController: VolumeController? = null
 
     private var i2cService: II2CService? = null
     private var carService: ICarService? = null
@@ -38,6 +44,10 @@ class MainService : Service() {
     private var autoWarmManager: AutoWarmManager? = null
     private var drlManager: DrlManager? = null
     private var seatHeatingManager: SeatHeatingManager? = null
+
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private var inputRetryCount = 0
+    private var displayOffReceiver: BroadcastReceiver? = null
 
     companion object {
         private const val TAG = "MainService"
@@ -81,12 +91,10 @@ class MainService : Service() {
         initializeKeyInput()
         initializeI2CService()
         initializeCarService()
+        registerDisplayOffReceiver()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (input == null && keyCallback == null) {
-            initializeKeyInput()
-        }
         checkAndStartAutoWarmManager()
         return START_STICKY
     }
@@ -105,9 +113,10 @@ class MainService : Service() {
         MigrationManager.runIfNeeded(settingsManager!!)
         drlManager = DrlManager(this)
         seatHeatingManager = SeatHeatingManager(this)
+        volumeController = VolumeController(this)
 
         try {
-            keyActionExecutor = KeyActionExecutor(this, drlManager!!, seatHeatingManager!!)
+            keyActionExecutor = KeyActionExecutor(this, drlManager!!, seatHeatingManager!!, settingsManager!!, volumeController!!)
             simpleKeyHandler = SimpleKeyHandler(this, keyActionExecutor!!)
         } catch (e: Throwable) {
             Log.e(TAG, "KeyActionExecutor init error (eCarX classes unavailable)", e)
@@ -143,8 +152,17 @@ class MainService : Service() {
         try {
             val inputClass = Class.forName("com.ecarx.xui.adaptapi.input.Input")
             val createMethod = inputClass.getMethod("create", Context::class.java)
-            val inputInstance = createMethod.invoke(null, this) ?: return
+            val inputInstance = createMethod.invoke(null, this)
+            if (inputInstance == null) {
+                inputRetryCount++
+                if (inputRetryCount <= 10) {
+                    Log.w(TAG, "Input.create() returned null, retry $inputRetryCount/10 in 2s")
+                    mainHandler.postDelayed({ initializeKeyInput() }, 2000)
+                }
+                return
+            }
             input = inputInstance
+            inputRetryCount = 0
 
             val callbackClass = Class.forName("com.ecarx.xui.adaptapi.input.IKeyCallback")
             val keyCallbackInstance = createKeyCallback()
@@ -165,10 +183,15 @@ class MainService : Service() {
 
             val requestMethod = inputClass.getMethod("requestKeysInterception", IntArray::class.java, callbackClass)
             requestMethod.invoke(inputInstance, keysToIntercept, keyCallbackInstance)
+            Log.i(TAG, "Key input interception registered successfully")
         } catch (e: ClassNotFoundException) {
             Log.w(TAG, "eCarX input classes not available (emulator mode)", e)
         } catch (e: Exception) {
-            Log.e(TAG, "Key input init error", e)
+            inputRetryCount++
+            if (inputRetryCount <= 10) {
+                Log.e(TAG, "Key input init error, retry $inputRetryCount/10 in 2s", e)
+                mainHandler.postDelayed({ initializeKeyInput() }, 2000)
+            }
         }
     }
 
@@ -182,12 +205,12 @@ class MainService : Service() {
                 "onKeyPressed" -> {
                     val keyCode = args[0] as Int
                     simpleKeyHandler?.handleKeyEvent(keyCode, 1)
-                    false
+                    java.lang.Boolean.TRUE
                 }
                 "onKeyReleased" -> {
                     val keyCode = args[0] as Int
                     simpleKeyHandler?.handleKeyEvent(keyCode, 0)
-                    false
+                    java.lang.Boolean.TRUE
                 }
                 "hashCode" -> System.identityHashCode(proxy)
                 "equals" -> proxy === args?.get(0)
@@ -278,8 +301,32 @@ class MainService : Service() {
         }
     }
 
+    private fun registerDisplayOffReceiver() {
+        val filter = IntentFilter().apply {
+            addAction("ecarx.intent.action.carsignal.DISPLAY_OFF")
+        }
+        displayOffReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == "ecarx.intent.action.carsignal.DISPLAY_OFF") {
+                    Log.i(TAG, "DISPLAY_OFF received, cleaning up pending key events")
+                    handleDisplayOff()
+                }
+            }
+        }
+        registerReceiver(displayOffReceiver, filter)
+    }
+
+    private fun handleDisplayOff() {
+        simpleKeyHandler?.cancelAllPending()
+        volumeController?.stopAll()
+    }
+
     private fun releaseAllServices() {
+        displayOffReceiver?.let { unregisterReceiver(it) }
+        displayOffReceiver = null
+        mainHandler.removeCallbacksAndMessages(null)
         simpleKeyHandler?.shutdown()
+        volumeController?.shutdown()
         try {
             if (input != null && keyCallback != null) {
                 val inputClass = Class.forName("com.ecarx.xui.adaptapi.input.Input")

@@ -73,6 +73,8 @@ fun ButtonSettingsScreen(
     var shortPressSplitRightApp by remember { mutableStateOf<AppInfo?>(null) }
     var longPressSplitLeftApp by remember { mutableStateOf<AppInfo?>(null) }
     var longPressSplitRightApp by remember { mutableStateOf<AppInfo?>(null) }
+    var shortPressIntentAction by remember { mutableStateOf<String?>(null) }
+    var longPressIntentAction by remember { mutableStateOf<String?>(null) }
     
     val apps by remember { derivedStateOf { getInstalledApps(context) } }
     
@@ -105,6 +107,8 @@ fun ButtonSettingsScreen(
         settingsManager.getButtonSplitAppPackage(buttonType, false, false)?.let { pkg ->
             shortPressSplitRightApp = AppInfo(pkg, settingsManager.getButtonSplitAppName(buttonType, false, false) ?: "", null)
         }
+
+        shortPressIntentAction = settingsManager.getButtonIntentAction(buttonType, false)
         
         // Загрузка настроек длинного нажатия
         longPressRemapped = settingsManager.isButtonRemapped(buttonType, true)
@@ -121,6 +125,8 @@ fun ButtonSettingsScreen(
         settingsManager.getButtonSplitAppPackage(buttonType, true, false)?.let { pkg ->
             longPressSplitRightApp = AppInfo(pkg, settingsManager.getButtonSplitAppName(buttonType, true, false) ?: "", null)
         }
+
+        longPressIntentAction = settingsManager.getButtonIntentAction(buttonType, true)
     }
     
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
@@ -141,6 +147,8 @@ fun ButtonSettingsScreen(
             shortPressSplitRightApp = shortPressSplitRightApp,
             longPressSplitLeftApp = longPressSplitLeftApp,
             longPressSplitRightApp = longPressSplitRightApp,
+            shortPressIntentAction = shortPressIntentAction,
+            longPressIntentAction = longPressIntentAction,
             apps = apps,
             onShortPressRemappedChange = { isRemapped ->
                 shortPressRemapped = isRemapped
@@ -178,6 +186,8 @@ fun ButtonSettingsScreen(
             onShortPressSplitRightAppSelected = { shortPressSplitRightApp = it; settingsManager.setButtonSplitApp(buttonType, false, false, it) },
             onLongPressSplitLeftAppSelected = { longPressSplitLeftApp = it; settingsManager.setButtonSplitApp(buttonType, true, true, it) },
             onLongPressSplitRightAppSelected = { longPressSplitRightApp = it; settingsManager.setButtonSplitApp(buttonType, true, false, it) },
+            onShortPressIntentActionChange = { shortPressIntentAction = it; settingsManager.setButtonIntentAction(buttonType, false, it) },
+            onLongPressIntentActionChange = { longPressIntentAction = it; settingsManager.setButtonIntentAction(buttonType, true, it) },
             showLongPressSettings = buttonType != SettingsManager.BTN_TOUCH_MUTE && buttonType != SettingsManager.BTN_TOUCH_POWER
         )
     }

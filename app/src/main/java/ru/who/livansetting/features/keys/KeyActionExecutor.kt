@@ -18,9 +18,10 @@ import ru.who.livansetting.utils.SplitScreenLauncher
  */
 class KeyActionExecutor(
     private val context: Context,
-    private val drlManager: DrlManager = DrlManager(context),
-    private val seatHeatingManager: SeatHeatingManager = SeatHeatingManager(context),
-    private val settingsManager: SettingsManager = SettingsManager(context)
+    private val drlManager: DrlManager,
+    private val seatHeatingManager: SeatHeatingManager,
+    private val settingsManager: SettingsManager,
+    private val volumeController: VolumeController
 ) {
 
     companion object {
@@ -51,9 +52,6 @@ class KeyActionExecutor(
 
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private val carMediaController = CarMediaController.getInstance(context)
-    private val volumeController = VolumeController(context)
-
-    @Volatile private var isScreensaverActive = false
 
     private val keyToButtonId = mapOf(
         KEYCODE_R_SRC to SettingsManager.BTN_MODE,
@@ -86,6 +84,7 @@ class KeyActionExecutor(
             ButtonActionType.TOGGLE_MEDIA_PLAY_PAUSE -> carMediaController.performCurrentMediaSessionAction(MediaActionType.PLAY_PAUSE)
             ButtonActionType.TOGGLE_MEDIA_NEXT -> carMediaController.performCurrentMediaSessionAction(MediaActionType.NEXT)
             ButtonActionType.TOGGLE_MEDIA_PREVIOUS -> carMediaController.performCurrentMediaSessionAction(MediaActionType.PREVIOUS)
+            ButtonActionType.SEND_INTENT -> sendIntentForButton(buttonId, isLongPress)
             ButtonActionType.DEFAULT_ACTION -> executeDefaultAction(keyCode, isLongPress)
             ButtonActionType.NOTHING -> { /* intentionally suppressed — user configured no action */ }
         }
@@ -166,17 +165,30 @@ class KeyActionExecutor(
     }
 
     private fun handlePower() {
-        if (!isScreensaverActive) {
-            isScreensaverActive = true
-            context.startService(Intent(SCREENSAVER_ACTION).apply { setPackage(SCREENSAVER_PACKAGE); addCategory(SCREENSAVER_CATEGORY) })
+        val wasActive = settingsManager.isScreensaverActive()
+        if (!wasActive) {
+            settingsManager.setScreensaverActive(true)
+            context.startService(Intent(SCREENSAVER_ACTION).apply {
+                setPackage(SCREENSAVER_PACKAGE)
+                addCategory(SCREENSAVER_CATEGORY)
+            })
+        } else {
+            settingsManager.setScreensaverActive(false)
+            context.sendBroadcast(Intent(ECARX_ACTION_POWER).apply {
+                addCategory(Intent.CATEGORY_DEFAULT)
+                putExtra("ecarx.extra.ECARX_KEY_EVENT_TYPE", 26)
+                putExtra("ecarx.extra.ECARX_KEY_ACTION_TYPE", 0)
+            })
+        }
+    }
+
+    private fun sendIntentForButton(buttonId: String, isLongPress: Boolean) {
+        val action = settingsManager.getButtonIntentAction(buttonId, isLongPress)
+        if (action.isNullOrEmpty()) {
+            Log.w(TAG, "SEND_INTENT: no action configured for button=$buttonId isLongPress=$isLongPress")
             return
         }
-        isScreensaverActive = false
-        context.sendBroadcast(Intent(ECARX_ACTION_POWER).apply {
-            addCategory(Intent.CATEGORY_DEFAULT)
-            putExtra("ecarx.extra.ECARX_KEY_EVENT_TYPE", 26)
-            putExtra("ecarx.extra.ECARX_KEY_ACTION_TYPE", 0)
-        })
-        context.startService(Intent(SCREENSAVER_ACTION).apply { setPackage(SCREENSAVER_PACKAGE); addCategory(SCREENSAVER_CATEGORY) })
+        Log.d(TAG, "SEND_INTENT: sending broadcast action=$action")
+        context.sendBroadcast(Intent(action))
     }
 }

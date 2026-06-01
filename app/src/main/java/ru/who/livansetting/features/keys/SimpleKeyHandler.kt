@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
  */
 class SimpleKeyHandler(
     private val context: Context,
-    private val keyActionExecutor: KeyActionExecutor = KeyActionExecutor(context)
+    private val keyActionExecutor: KeyActionExecutor
 ) {
 
     companion object {
@@ -54,10 +54,14 @@ class SimpleKeyHandler(
     }
 
     private fun handleKeyPressed(keyCode: Int) {
-        Log.d(TAG, "Key pressed: keyCode=$keyCode")
         val currentTime = System.currentTimeMillis()
 
         synchronized(lock) {
+            if (keyPressTimes.containsKey(keyCode)) {
+                Log.d(TAG, "Duplicate key-down ignored for keyCode=$keyCode")
+                return
+            }
+
             val lastTime = lastProcessedTime[keyCode] ?: 0
             if (currentTime - lastTime < DEBOUNCE_DURATION) {
                 Log.d(TAG, "Debounce rejected keyCode=$keyCode")
@@ -138,5 +142,17 @@ class SimpleKeyHandler(
 
     fun shutdown() {
         executor.shutdownNow()
+    }
+
+    fun cancelAllPending() {
+        synchronized(lock) {
+            for (future in longPressFutures.values) {
+                future.cancel(false)
+            }
+            longPressFutures.clear()
+            keyPressTimes.clear()
+            processedLongPresses.clear()
+        }
+        Log.d(TAG, "All pending key events cancelled")
     }
 }

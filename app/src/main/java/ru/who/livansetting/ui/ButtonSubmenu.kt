@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.toBitmap
 import ru.who.livansetting.R
 import ru.who.livansetting.data.AppInfo
 import ru.who.livansetting.data.ButtonActionType
+import ru.who.livansetting.data.PredefinedIntent
 import ru.who.livansetting.utils.BuildPropUtils
 
 @Composable
@@ -32,6 +33,8 @@ fun ButtonSubmenu(
     shortPressSplitRightApp: AppInfo?,
     longPressSplitLeftApp: AppInfo?,
     longPressSplitRightApp: AppInfo?,
+    shortPressIntentAction: String?,
+    longPressIntentAction: String?,
     apps: List<AppInfo>,
     onShortPressRemappedChange: (Boolean) -> Unit,
     onLongPressRemappedChange: (Boolean) -> Unit,
@@ -43,6 +46,8 @@ fun ButtonSubmenu(
     onShortPressSplitRightAppSelected: (AppInfo?) -> Unit,
     onLongPressSplitLeftAppSelected: (AppInfo?) -> Unit,
     onLongPressSplitRightAppSelected: (AppInfo?) -> Unit,
+    onShortPressIntentActionChange: (String) -> Unit,
+    onLongPressIntentActionChange: (String) -> Unit,
     showLongPressSettings: Boolean = true,
     modifier: Modifier = Modifier
 ) {
@@ -52,17 +57,17 @@ fun ButtonSubmenu(
             
             PressSegment(
                 stringResource(R.string.short_press), shortPressRemapped, shortPressActionType, 
-                shortPressApp, shortPressSplitLeftApp, shortPressSplitRightApp, apps,
+                shortPressApp, shortPressSplitLeftApp, shortPressSplitRightApp, shortPressIntentAction, apps,
                 onShortPressRemappedChange, onShortPressActionTypeChange, onShortPressAppSelected,
-                onShortPressSplitLeftAppSelected, onShortPressSplitRightAppSelected
+                onShortPressSplitLeftAppSelected, onShortPressSplitRightAppSelected, onShortPressIntentActionChange
             )
             
             if (showLongPressSettings) {
                 PressSegment(
                     stringResource(R.string.long_press), longPressRemapped, longPressActionType,
-                    longPressApp, longPressSplitLeftApp, longPressSplitRightApp, apps,
+                    longPressApp, longPressSplitLeftApp, longPressSplitRightApp, longPressIntentAction, apps,
                     onLongPressRemappedChange, onLongPressActionTypeChange, onLongPressAppSelected,
-                    onLongPressSplitLeftAppSelected, onLongPressSplitRightAppSelected
+                    onLongPressSplitLeftAppSelected, onLongPressSplitRightAppSelected, onLongPressIntentActionChange
                 )
             }
         }
@@ -77,17 +82,20 @@ private fun PressSegment(
     selectedApp: AppInfo?,
     splitLeftApp: AppInfo?,
     splitRightApp: AppInfo?,
+    intentAction: String?,
     apps: List<AppInfo>,
     onRemappedChange: (Boolean) -> Unit,
     onActionTypeChange: (ButtonActionType) -> Unit,
     onAppSelected: (AppInfo?) -> Unit,
     onSplitLeftAppSelected: (AppInfo?) -> Unit,
-    onSplitRightAppSelected: (AppInfo?) -> Unit
+    onSplitRightAppSelected: (AppInfo?) -> Unit,
+    onIntentActionChange: (String) -> Unit
 ) {
     var expandedActionType by remember { mutableStateOf(false) }
     var expandedApp by remember { mutableStateOf(false) }
     var expandedSplitLeft by remember { mutableStateOf(false) }
     var expandedSplitRight by remember { mutableStateOf(false) }
+    var expandedIntent by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         Text(text = title, fontSize = 14.sp, fontWeight = FontWeight.Medium)
@@ -122,6 +130,11 @@ private fun PressSegment(
                 Spacer(modifier = Modifier.height(8.dp))
                 AppSelector(splitRightApp, apps, onSplitRightAppSelected, expandedSplitRight, { expandedSplitRight = it }, stringResource(R.string.select_app_right))
             }
+
+            if (actionType == ButtonActionType.SEND_INTENT) {
+                Spacer(modifier = Modifier.height(8.dp))
+                IntentSelector(intentAction, onIntentActionChange, expandedIntent, { expandedIntent = it })
+            }
         }
     }
 }
@@ -138,6 +151,7 @@ private fun getActionTypeName(type: ButtonActionType): String {
         ButtonActionType.TOGGLE_MEDIA_PLAY_PAUSE -> stringResource(R.string.action_toggle_media_play_pause)
         ButtonActionType.TOGGLE_MEDIA_NEXT -> stringResource(R.string.action_toggle_media_next)
         ButtonActionType.TOGGLE_MEDIA_PREVIOUS -> stringResource(R.string.action_toggle_media_previous)
+        ButtonActionType.SEND_INTENT -> stringResource(R.string.action_send_intent)
         ButtonActionType.DEFAULT_ACTION -> stringResource(R.string.action_default)
     }
 }
@@ -155,6 +169,33 @@ private fun AppSelector(selectedApp: AppInfo?, apps: List<AppInfo>, onSelected: 
                     text = { Text(app.appName) },
                     leadingIcon = { app.icon?.let { Image(it.toBitmap(48, 48).asImageBitmap(), null, modifier = Modifier.size(24.dp)) } },
                     onClick = { onSelected(app); onExpandChange(false) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun IntentSelector(
+    selectedAction: String?,
+    onSelected: (String) -> Unit,
+    expanded: Boolean,
+    onExpandChange: (Boolean) -> Unit
+) {
+    val selected = PredefinedIntent.ALL.find { it.action == selectedAction }
+    Box {
+        OutlinedButton(onClick = { onExpandChange(true) }, modifier = Modifier.fillMaxWidth()) {
+            Text(
+                selected?.let { "${it.name} (${it.action})" } ?: stringResource(R.string.select_intent),
+                modifier = Modifier.weight(1f)
+            )
+            Icon(Icons.Default.ArrowDropDown, null)
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { onExpandChange(false) }) {
+            PredefinedIntent.ALL.forEach { intent ->
+                DropdownMenuItem(
+                    text = { Text("${intent.name}\n${intent.action}") },
+                    onClick = { onSelected(intent.action); onExpandChange(false) }
                 )
             }
         }
