@@ -88,6 +88,12 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                     settingsManager.setDriveModeSelection(mode)
                 }
             }
+
+            item {
+                ButtonSettingCard(stringResource(R.string.dim_navi_title)) {
+                    context.startActivity(NaviSettingsActivity.createIntent(context))
+                }
+            }
         }
     }
 }

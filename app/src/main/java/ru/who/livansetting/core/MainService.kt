@@ -23,6 +23,7 @@ import ru.who.livansetting.features.keys.KeyActionExecutor
 import ru.who.livansetting.features.auto.AutoWarmManager
 import ru.who.livansetting.features.auto.DrlManager
 import ru.who.livansetting.features.auto.SeatHeatingManager
+import ru.who.livansetting.features.navi.DimNaviManager
 import ru.who.livansetting.ui.MainActivity
 import ru.who.livansetting.utils.VolumeController
 
@@ -44,6 +45,7 @@ class MainService : Service() {
     private var autoWarmManager: AutoWarmManager? = null
     private var drlManager: DrlManager? = null
     private var seatHeatingManager: SeatHeatingManager? = null
+    private var dimNaviManager: DimNaviManager? = null
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private var inputRetryCount = 0
@@ -92,6 +94,7 @@ class MainService : Service() {
         initializeI2CService()
         initializeCarService()
         registerDisplayOffReceiver()
+        initializeDimNaviManager()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -301,6 +304,20 @@ class MainService : Service() {
         }
     }
 
+    private fun initializeDimNaviManager() {
+        try {
+            dimNaviManager = DimNaviManager(this)
+            dimNaviManager?.start()
+        } catch (e: Throwable) {
+            Log.e(TAG, "DimNaviManager init error", e)
+        }
+    }
+
+    /** Перечитать настройку вкл/выкл навигации на приборке (вызывается из UI). */
+    fun refreshDimNavi() {
+        dimNaviManager?.applyEnabledState()
+    }
+
     private fun registerDisplayOffReceiver() {
         val filter = IntentFilter().apply {
             addAction("ecarx.intent.action.carsignal.DISPLAY_OFF")
@@ -341,6 +358,7 @@ class MainService : Service() {
         carService?.cleanup()
         sensorService?.cleanup()
         autoWarmManager?.cleanup()
+        dimNaviManager?.cleanup()
     }
 
     fun getCarService(): ICarService? = carService
@@ -348,4 +366,5 @@ class MainService : Service() {
     fun getSimpleKeyHandler(): SimpleKeyHandler? = simpleKeyHandler
     fun getSettingsManager(): SettingsManager? = settingsManager
     fun getSensorService(): ISensorService? = sensorService
+    fun getDimNaviManager(): DimNaviManager? = dimNaviManager
 }

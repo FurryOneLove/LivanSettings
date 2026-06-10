@@ -63,6 +63,13 @@
             android:theme="@style/Theme.LivanSetting"
             android:parentActivityName=".ui.MainActivity" />
 
+        <activity
+            android:name=".ui.NaviSettingsActivity"
+            android:exported="false"
+            android:label="@string/dim_navi_title"
+            android:theme="@style/Theme.LivanSetting"
+            android:parentActivityName=".ui.MainActivity" />
+
         <receiver
             android:name=".core.BootReceiver"
             android:enabled="true"

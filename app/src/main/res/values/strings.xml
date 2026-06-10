@@ -142,4 +142,19 @@
     <string name="action_default">Действие по умолчанию</string>
     <string name="action_send_intent">Отправить интент</string>
     <string name="select_intent">Выберите интент</string>
+
+    <!-- Навигация на приборке (DIM) -->
+    <string name="dim_navi_title">Навигация на приборке</string>
+    <string name="dim_navi_enable">Выводить навигацию на приборку</string>
+    <string name="dim_navi_enable_desc">Стрелки манёвров, расстояние и время от Яндекс.Навигатора</string>
+    <string name="dim_navi_finishing">Снимать маршрут на финише</string>
+    <string name="dim_navi_finishing_desc">Скрывать подсказки на последних метрах до точки</string>
+    <string name="dim_navi_hint">Данные навигации поступают не от самого приложения Яндекса, а от Xposed-модуля «Yandex Maps Patcher» (ru.bluecat.yandexmapspatcher), который патчит приложение и заставляет его рассылать манёвры broadcast\'ами. Поддерживаются Яндекс.Карты, Яндекс.Навигатор и Yango Maps (тестировались версии 25.6.2–27.2.2). Для работы нужны: root и Xposed-фреймворк (LSPosed); установленный модуль Yandex Maps Patcher с активированной областью (scope) на нужное приложение; и совместимая версия самого приложения навигации. Функция работает только на головном устройстве Livan; в эмуляторе данные не отображаются.</string>
+    <string name="dim_navi_source_active">Источник активен — данные навигации поступают</string>
+    <string name="dim_navi_source_inactive">Источник не обнаружен</string>
+    <string name="dim_navi_source_inactive_desc">Broadcast от патчера не приходит. Проверьте, что установлен Yandex Maps Patcher с активированной областью на нужное приложение (Яндекс.Карты / Навигатор / Yango Maps), а само приложение запущено и ведёт маршрут.</string>
+    <string name="dim_navi_test">Тестовый маршрут</string>
+    <string name="dim_navi_test_desc">Проиграть демо-манёвры на приборке для проверки вывода</string>
+    <string name="dim_navi_test_start">Запустить тест</string>
+    <string name="dim_navi_test_stop">Остановить тест</string>
 </resources>

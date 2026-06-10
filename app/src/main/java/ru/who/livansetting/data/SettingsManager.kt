@@ -103,6 +103,21 @@ class SettingsManager(context: Context) {
 
     fun setDriveModeSelection(mode: DriveModeSelection) = prefs.edit().putString(KEY_DRIVE_MODE_SELECTION, mode.name).apply()
 
+    // --- DIM Navigation (вывод навигации на приборку) ---
+
+    /** Включён ли вывод навигации на приборку. По умолчанию выключено. */
+    fun isDimNaviEnabled(): Boolean = prefs.getBoolean(KEY_DIM_NAVI_ENABLED, false)
+    fun setDimNaviEnabled(enabled: Boolean) =
+        prefs.edit().putBoolean(KEY_DIM_NAVI_ENABLED, enabled).apply()
+
+    /**
+     * Порог (в метрах) для снятия маршрута на финишной прямой.
+     * <= 0 — функция выключена (маршрут не снимается заранее).
+     */
+    fun getDimNaviFinishingEst(): Int = prefs.getInt(KEY_DIM_NAVI_FINISHING_EST, -1)
+    fun setDimNaviFinishingEst(meters: Int) =
+        prefs.edit().putInt(KEY_DIM_NAVI_FINISHING_EST, meters).apply()
+
     companion object {
         private const val PREFS_NAME = "ru.who.livansetting.prefs"
 
@@ -120,6 +135,12 @@ class SettingsManager(context: Context) {
         private const val KEY_WELCOME_LIGHT_ENABLED = "welcome_light_enabled"
         private const val KEY_DRIVE_MODE_SELECTION = "drive_mode_selection"
         private const val KEY_SCREENSAVER_ACTIVE = "screensaver_active"
+
+        private const val KEY_DIM_NAVI_ENABLED = "dim_navi_enabled"
+        private const val KEY_DIM_NAVI_FINISHING_EST = "dim_navi_finishing_est"
+
+        /** Максимальная длина названия улицы, влезающая на приборку. */
+        const val DIM_NAVI_STREET_NAME_LIMIT = 24
     }
 
     fun isScreensaverActive(): Boolean =
