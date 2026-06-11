@@ -118,6 +118,13 @@ class SettingsManager(context: Context) {
     fun setDimNaviFinishingEst(meters: Int) =
         prefs.edit().putInt(KEY_DIM_NAVI_FINISHING_EST, meters).apply()
 
+    // --- DIM Music (вывод музыки на приборку) ---
+
+    /** Включён ли вывод информации о треке на приборку. По умолчанию выключено. */
+    fun isDimMusicEnabled(): Boolean = prefs.getBoolean(KEY_DIM_MUSIC_ENABLED, false)
+    fun setDimMusicEnabled(enabled: Boolean) =
+        prefs.edit().putBoolean(KEY_DIM_MUSIC_ENABLED, enabled).apply()
+
     companion object {
         private const val PREFS_NAME = "ru.who.livansetting.prefs"
 
@@ -138,6 +145,7 @@ class SettingsManager(context: Context) {
 
         private const val KEY_DIM_NAVI_ENABLED = "dim_navi_enabled"
         private const val KEY_DIM_NAVI_FINISHING_EST = "dim_navi_finishing_est"
+        private const val KEY_DIM_MUSIC_ENABLED = "dim_music_enabled"
 
         /** Максимальная длина названия улицы, влезающая на приборку. */
         const val DIM_NAVI_STREET_NAME_LIMIT = 24

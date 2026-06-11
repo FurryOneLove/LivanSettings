@@ -157,4 +157,13 @@
     <string name="dim_navi_test_desc">Проиграть демо-манёвры на приборке для проверки вывода</string>
     <string name="dim_navi_test_start">Запустить тест</string>
     <string name="dim_navi_test_stop">Остановить тест</string>
+
+    <!-- Музыка на приборке (DIM) -->
+    <string name="dim_music_title">Музыка на приборке</string>
+    <string name="dim_music_enable">Выводить трек на приборку</string>
+    <string name="dim_music_enable_desc">Название, исполнитель и прогресс текущего трека из любого плеера</string>
+    <string name="dim_music_test">Проверка вывода</string>
+    <string name="dim_music_test_desc">Показать приветственный экран на приборке</string>
+    <string name="dim_music_test_btn">Показать на приборке</string>
+    <string name="dim_music_hint">Данные о треке берутся из системных медиа-сессий — работает с любым плеером (Яндекс.Музыка, Bluetooth, локальный плеер). Нужно разрешение доступа к уведомлениям (Настройки → Доступ к уведомлениям → разрешить для этого приложения). Функция работает только на головном устройстве Livan; в эмуляторе данные не отображаются.</string>
 </resources>

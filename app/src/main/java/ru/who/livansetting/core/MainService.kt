@@ -24,6 +24,7 @@ import ru.who.livansetting.features.auto.AutoWarmManager
 import ru.who.livansetting.features.auto.DrlManager
 import ru.who.livansetting.features.auto.SeatHeatingManager
 import ru.who.livansetting.features.navi.DimNaviManager
+import ru.who.livansetting.features.music.DimMusicManager
 import ru.who.livansetting.ui.MainActivity
 import ru.who.livansetting.utils.VolumeController
 
@@ -46,6 +47,7 @@ class MainService : Service() {
     private var drlManager: DrlManager? = null
     private var seatHeatingManager: SeatHeatingManager? = null
     private var dimNaviManager: DimNaviManager? = null
+    private var dimMusicManager: DimMusicManager? = null
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private var inputRetryCount = 0
@@ -95,6 +97,7 @@ class MainService : Service() {
         initializeCarService()
         registerDisplayOffReceiver()
         initializeDimNaviManager()
+        initializeDimMusicManager()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -318,6 +321,20 @@ class MainService : Service() {
         dimNaviManager?.applyEnabledState()
     }
 
+    private fun initializeDimMusicManager() {
+        try {
+            dimMusicManager = DimMusicManager(this)
+            dimMusicManager?.start()
+        } catch (e: Throwable) {
+            Log.e(TAG, "DimMusicManager init error", e)
+        }
+    }
+
+    /** Перечитать настройку вкл/выкл музыки на приборке (вызывается из UI). */
+    fun refreshDimMusic() {
+        dimMusicManager?.applyEnabledState()
+    }
+
     private fun registerDisplayOffReceiver() {
         val filter = IntentFilter().apply {
             addAction("ecarx.intent.action.carsignal.DISPLAY_OFF")
@@ -359,6 +376,7 @@ class MainService : Service() {
         sensorService?.cleanup()
         autoWarmManager?.cleanup()
         dimNaviManager?.cleanup()
+        dimMusicManager?.cleanup()
     }
 
     fun getCarService(): ICarService? = carService
@@ -367,4 +385,5 @@ class MainService : Service() {
     fun getSettingsManager(): SettingsManager? = settingsManager
     fun getSensorService(): ISensorService? = sensorService
     fun getDimNaviManager(): DimNaviManager? = dimNaviManager
+    fun getDimMusicManager(): DimMusicManager? = dimMusicManager
 }

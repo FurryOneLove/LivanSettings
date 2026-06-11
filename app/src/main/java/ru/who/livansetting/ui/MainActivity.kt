@@ -61,6 +61,20 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         )
         
         LazyColumn {
+            item {
+                ButtonSettingCard(stringResource(R.string.dim_navi_title)) {
+                    context.startActivity(NaviSettingsActivity.createIntent(context))
+                }
+            }
+
+            item {
+                ButtonSettingCard(stringResource(R.string.dim_music_title)) {
+                    context.startActivity(MusicSettingsActivity.createIntent(context))
+                }
+            }
+
+            item { HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp)) }
+
             val buttons = listOf(
                 R.string.mode_button to SettingsManager.BTN_MODE,
                 R.string.home_button to SettingsManager.BTN_HOME,
@@ -86,12 +100,6 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 DriveModeSelectionCard(selectedDriveMode) { mode ->
                     selectedDriveMode = mode
                     settingsManager.setDriveModeSelection(mode)
-                }
-            }
-
-            item {
-                ButtonSettingCard(stringResource(R.string.dim_navi_title)) {
-                    context.startActivity(NaviSettingsActivity.createIntent(context))
                 }
             }
         }
