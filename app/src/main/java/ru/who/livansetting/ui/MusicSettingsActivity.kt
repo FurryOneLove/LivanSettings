@@ -97,31 +97,6 @@ fun MusicSettingsScreen(modifier: Modifier = Modifier) {
             }
 
             item {
-                Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = stringResource(R.string.dim_music_test),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Text(
-                            text = stringResource(R.string.dim_music_test_desc),
-                            fontSize = 13.sp
-                        )
-                        Spacer(Modifier.height(8.dp))
-                        OutlinedButton(
-                            onClick = {
-                                MainService.getInstance()?.getDimMusicManager()?.publishWelcome()
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(stringResource(R.string.dim_music_test_btn))
-                        }
-                    }
-                }
-            }
-
-            item {
                 Text(
                     text = stringResource(R.string.dim_music_hint),
                     fontSize = 13.sp,

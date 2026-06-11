@@ -15,13 +15,18 @@ import ru.who.livansetting.data.SettingsManager
 /**
  * Транслирует информацию о текущем треке на приборку (DIM).
  *
- * Источник данных — системные MediaSession (как в Lunaris): читает метаданные
- * активной медиа-сессии любого играющего приложения (Яндекс.Музыка, BT,
- * локальный плеер и т.д.) и публикует их через
+ * Источник данных — системные MediaSession: читает метаданные активной
+ * медиа-сессии любого играющего приложения (Яндекс.Музыка, BT, локальный
+ * плеер и т.д.) и публикует их через
  * IMediaInteraction.updatePlaybackInfo(IPlaybackInfo).
  *
  * Требует разрешения доступа к уведомлениям (NotificationListener) — оно уже
  * используется в проекте для MediaNotificationListenerService.
+ *
+ * Подключение к приборке выполнено по образцу системного DimInteractionHelper
+ * (ecarx.xsf.mediacenter): при наличии IConnectable сначала connect() и
+ * ожидание onConnected(), затем getMediaInteraction(); перед публикацией трека
+ * вызывается updateCurrentSourceType().
  *
  * Все обращения к eCarX-классам — через рефлексию, чтобы проект собирался и
  * работал в эмуляторе.
@@ -42,6 +47,7 @@ class DimMusicManager(private val context: Context) {
     private var enabled = false
 
     private var lastUuid: String = ""
+    private var lastSourceType: Int = -1
 
     /** Периодический пуш прогресса во время проигрывания. */
     private val periodicRunnable = object : Runnable {
@@ -61,7 +67,7 @@ class DimMusicManager(private val context: Context) {
         enabled = true
 
         if (!createMediaInteraction()) {
-            Log.w(TAG, "MediaInteraction unavailable (emulator or no system access)")
+            Log.w(TAG, "MediaInteraction unavailable or connecting asynchronously")
         }
         handler.post(periodicRunnable)
         Log.i(TAG, "DimMusicManager started")
@@ -80,12 +86,6 @@ class DimMusicManager(private val context: Context) {
 
     fun isEnabled(): Boolean = enabled
 
-    /** Показать приветствие на приборке (для теста вывода). */
-    fun publishWelcome() {
-        if (mediaInteraction == null) createMediaInteraction()
-        publish(DimMusicData.welcome())
-    }
-
     // --- DIM ---
 
     private fun createMediaInteraction(): Boolean {
@@ -98,15 +98,84 @@ class DimMusicManager(private val context: Context) {
             }
             dimInteraction = instance
 
-            val mediaMethod = clazz.getMethod("getMediaInteraction")
-            mediaInteraction = mediaMethod.invoke(instance)
-            dimConnected = mediaInteraction != null
+            // Как в системном DimInteractionHelper: если DimInteraction реализует
+            // IConnectable — сначала connect() и ждём onConnected(), а
+            // getMediaInteraction() зовём уже после установления связи. Без этого
+            // на части прошивок (Neusoft) mediaInteraction приходит null.
+            val connectable = tryConnectViaIConnectable(instance, clazz)
+            if (connectable) {
+                // mediaInteraction будет получен в коллбэке onConnected.
+                return false
+            }
+
+            // Прошивка без IConnectable — получаем сразу.
+            bindMediaInteraction(instance, clazz)
             dimConnected
         } catch (e: ClassNotFoundException) {
             Log.w(TAG, "eCarX DimInteraction classes not available (emulator mode)")
             false
         } catch (e: Exception) {
             Log.e(TAG, "createMediaInteraction error", e)
+            false
+        }
+    }
+
+    /** Получить mediaInteraction из dimInteraction и отметить подключение. */
+    private fun bindMediaInteraction(instance: Any, clazz: Class<*>) {
+        val mediaMethod = clazz.getMethod("getMediaInteraction")
+        mediaInteraction = mediaMethod.invoke(instance)
+        dimConnected = mediaInteraction != null
+    }
+
+    /**
+     * Пытается подключиться через IConnectable (как системный медиацентр).
+     * Возвращает true, если интерфейс поддержан и connect() вызван;
+     * false — если IConnectable недоступен (тогда вызывающий получает media напрямую).
+     */
+    private fun tryConnectViaIConnectable(instance: Any, dimClazz: Class<*>): Boolean {
+        return try {
+            if (android.os.Build.VERSION.SDK_INT < 26) return false
+            val connectableClass =
+                Class.forName("com.ecarx.xui.adaptapi.binder.IConnectable")
+            if (!connectableClass.isInstance(instance)) return false
+
+            val watcherClass = Class.forName(
+                "com.ecarx.xui.adaptapi.binder.IConnectable\$IConnectWatcher"
+            )
+            val watcher = java.lang.reflect.Proxy.newProxyInstance(
+                watcherClass.classLoader,
+                arrayOf(watcherClass)
+            ) { _, method, _ ->
+                when (method.name) {
+                    "onConnected" -> {
+                        try {
+                            bindMediaInteraction(instance, dimClazz)
+                            Log.i(TAG, "IConnectable onConnected — media bound")
+                        } catch (e: Exception) {
+                            Log.e(TAG, "bind after onConnected failed", e)
+                        }
+                        null
+                    }
+                    "onDisConnected" -> {
+                        dimConnected = false
+                        null
+                    }
+                    else -> null
+                }
+            }
+
+            val registerMethod =
+                connectableClass.getMethod("registerConnectWatcher", watcherClass)
+            registerMethod.invoke(instance, watcher)
+            val connectMethod = connectableClass.getMethod("connect")
+            connectMethod.invoke(instance)
+            Log.i(TAG, "IConnectable.connect() called")
+            true
+        } catch (e: ClassNotFoundException) {
+            // На этой прошивке IConnectable нет — это нормально.
+            false
+        } catch (e: Exception) {
+            Log.w(TAG, "IConnectable path failed, fallback to direct", e)
             false
         }
     }
@@ -176,6 +245,21 @@ class DimMusicManager(private val context: Context) {
         val media = mediaInteraction ?: return
         if (!dimConnected) return
         try {
+            // Сообщить приборке тип источника ДО публикации трека —
+            // как системный DimInteractionHelper.updateCurrentSourceType().
+            // Зовём только при смене типа.
+            if (lastSourceType != data.sourceType) {
+                try {
+                    val stMethod = media.javaClass.getMethod(
+                        "updateCurrentSourceType",
+                        Int::class.javaPrimitiveType
+                    )
+                    stMethod.invoke(media, data.sourceType)
+                    lastSourceType = data.sourceType
+                } catch (_: NoSuchMethodException) {
+                }
+            }
+
             val infoProxy = DimPlaybackInfo.createProxy(data)
             val infoClass = Class.forName(
                 "com.ecarx.xui.adaptapi.diminteraction.IMediaInteraction\$IPlaybackInfo"
@@ -201,9 +285,22 @@ class DimMusicManager(private val context: Context) {
 
     fun cleanup() {
         stop()
+        // Отписаться от IConnectable, если подключались.
+        try {
+            val inst = dimInteraction
+            if (inst != null) {
+                val connectableClass =
+                    Class.forName("com.ecarx.xui.adaptapi.binder.IConnectable")
+                if (connectableClass.isInstance(inst)) {
+                    connectableClass.getMethod("unregisterConnectWatcher").invoke(inst)
+                }
+            }
+        } catch (_: Exception) {
+        }
         mediaInteraction = null
         dimInteraction = null
         dimConnected = false
+        lastSourceType = -1
     }
 
     companion object {

@@ -2,8 +2,7 @@ package ru.who.livansetting.features.music
 
 /**
  * Готовые данные о воспроизведении для приборки (DIM).
- * Лимиты длины полей подобраны под размеры виджета на приборке
- * (как в реализации Lunaris).
+ * Лимиты длины полей подобраны под размеры виджета на приборке.
  */
 data class DimMusicData(
     var title: String = "",
@@ -31,14 +30,5 @@ data class DimMusicData(
         const val STATUS_PLAYING = 1
 
         const val SOURCE_TYPE_ONLINE = 6
-
-        /** Приветственный экран при старте (как «Добро пожаловать» в Lunaris). */
-        fun welcome(): DimMusicData = DimMusicData(
-            title = "Добро пожаловать",
-            artist = "(^_^)",
-            album = "Livan",
-            playbackStatus = STATUS_PAUSED,
-            uuid = "welcome"
-        )
     }
 }
