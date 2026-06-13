@@ -17,16 +17,14 @@ import ru.who.livansetting.data.SettingsManager
  *
  * Источник данных — системные MediaSession: читает метаданные активной
  * медиа-сессии любого играющего приложения (Яндекс.Музыка, BT, локальный
- * плеер и т.д.) и публикует их через
- * IMediaInteraction.updatePlaybackInfo(IPlaybackInfo).
+ * плеер) и публикует их через IMediaInteraction.updatePlaybackInfo(IPlaybackInfo).
  *
- * Требует разрешения доступа к уведомлениям (NotificationListener) — оно уже
- * используется в проекте для MediaNotificationListenerService.
+ * Подключение к приборке — как в системном DimInteractionHelper:
+ * если DimInteraction реализует IConnectable, нужно сначала connect() и дождаться
+ * onConnected(), только потом getMediaInteraction(). Прямой вызов на таких
+ * прошивках бросает исключение.
  *
- * Подключение к приборке выполнено по образцу системного DimInteractionHelper
- * (ecarx.xsf.mediacenter): при наличии IConnectable сначала connect() и
- * ожидание onConnected(), затем getMediaInteraction(); перед публикацией трека
- * вызывается updateCurrentSourceType().
+ * Доступ к уведомлениям приложение выдаёт себе само через root при старте.
  *
  * Все обращения к eCarX-классам — через рефлексию, чтобы проект собирался и
  * работал в эмуляторе.
@@ -49,7 +47,6 @@ class DimMusicManager(private val context: Context) {
     private var lastUuid: String = ""
     private var lastSourceType: Int = -1
 
-    /** Периодический пуш прогресса во время проигрывания. */
     private val periodicRunnable = object : Runnable {
         override fun run() {
             if (!enabled) return
@@ -66,8 +63,14 @@ class DimMusicManager(private val context: Context) {
         if (enabled) return
         enabled = true
 
+        try {
+            NotificationAccessHelper.grant(context)
+        } catch (e: Exception) {
+            Log.w(TAG, "notification access grant error", e)
+        }
+
         if (!createMediaInteraction()) {
-            Log.w(TAG, "MediaInteraction unavailable or connecting asynchronously")
+            Log.w(TAG, "MediaInteraction not ready yet (connecting or unavailable)")
         }
         handler.post(periodicRunnable)
         Log.i(TAG, "DimMusicManager started")
@@ -86,29 +89,30 @@ class DimMusicManager(private val context: Context) {
 
     fun isEnabled(): Boolean = enabled
 
-    // --- DIM ---
-
     private fun createMediaInteraction(): Boolean {
+        if (dimConnected && mediaInteraction != null) return true
         return try {
             val clazz = Class.forName("com.ecarx.xui.adaptapi.diminteraction.DimInteraction")
-            val createMethod = clazz.getMethod("create", Context::class.java)
-            val instance = createMethod.invoke(null, context) ?: run {
+            val instance = dimInteraction ?: run {
+                val createMethod = clazz.getMethod("create", Context::class.java)
+                createMethod.invoke(null, context)
+            }
+            if (instance == null) {
                 Log.w(TAG, "DimInteraction.create() returned null")
                 return false
             }
             dimInteraction = instance
 
-            // Как в системном DimInteractionHelper: если DimInteraction реализует
-            // IConnectable — сначала connect() и ждём onConnected(), а
-            // getMediaInteraction() зовём уже после установления связи. Без этого
-            // на части прошивок (Neusoft) mediaInteraction приходит null.
-            val connectable = tryConnectViaIConnectable(instance, clazz)
-            if (connectable) {
-                // mediaInteraction будет получен в коллбэке onConnected.
-                return false
+            val isConnectable = isIConnectable(instance)
+            if (android.os.Build.VERSION.SDK_INT >= 26 && isConnectable) {
+                tryConnectViaIConnectable(instance, clazz)
+                if (mediaInteraction == null) {
+                    return false
+                }
+                dimConnected = true
+                return true
             }
 
-            // Прошивка без IConnectable — получаем сразу.
             bindMediaInteraction(instance, clazz)
             dimConnected
         } catch (e: ClassNotFoundException) {
@@ -120,18 +124,20 @@ class DimMusicManager(private val context: Context) {
         }
     }
 
-    /** Получить mediaInteraction из dimInteraction и отметить подключение. */
+    private fun isIConnectable(instance: Any): Boolean {
+        return try {
+            Class.forName("com.ecarx.xui.adaptapi.binder.IConnectable").isInstance(instance)
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     private fun bindMediaInteraction(instance: Any, clazz: Class<*>) {
         val mediaMethod = clazz.getMethod("getMediaInteraction")
         mediaInteraction = mediaMethod.invoke(instance)
         dimConnected = mediaInteraction != null
     }
 
-    /**
-     * Пытается подключиться через IConnectable (как системный медиацентр).
-     * Возвращает true, если интерфейс поддержан и connect() вызван;
-     * false — если IConnectable недоступен (тогда вызывающий получает media напрямую).
-     */
     private fun tryConnectViaIConnectable(instance: Any, dimClazz: Class<*>): Boolean {
         return try {
             if (android.os.Build.VERSION.SDK_INT < 26) return false
@@ -172,20 +178,21 @@ class DimMusicManager(private val context: Context) {
             Log.i(TAG, "IConnectable.connect() called")
             true
         } catch (e: ClassNotFoundException) {
-            // На этой прошивке IConnectable нет — это нормально.
             false
         } catch (e: Exception) {
-            Log.w(TAG, "IConnectable path failed, fallback to direct", e)
+            Log.w(TAG, "IConnectable path failed", e)
             false
         }
     }
 
-    /** Прочитать активную сессию и опубликовать на приборку, если что-то изменилось. */
     private fun publishCurrent() {
+        if (!dimConnected || mediaInteraction == null) {
+            createMediaInteraction()
+        }
+
         val controller = findActiveSession() ?: return
         val data = buildData(controller)
 
-        // Дедупликация: не слать одно и то же (кроме обновления времени при игре).
         if (data.uuid == lastUuid && data.playbackStatus != DimMusicData.STATUS_PLAYING) {
             return
         }
@@ -193,7 +200,6 @@ class DimMusicManager(private val context: Context) {
         publish(data)
     }
 
-    /** Выбор активной сессии — та же логика, что в CarMediaController. */
     private fun findActiveSession(): MediaController? {
         if (MediaNotificationListenerService.getInstance() == null) {
             Log.d(TAG, "NotificationListener not running")
@@ -245,9 +251,6 @@ class DimMusicManager(private val context: Context) {
         val media = mediaInteraction ?: return
         if (!dimConnected) return
         try {
-            // Сообщить приборке тип источника ДО публикации трека —
-            // как системный DimInteractionHelper.updateCurrentSourceType().
-            // Зовём только при смене типа.
             if (lastSourceType != data.sourceType) {
                 try {
                     val stMethod = media.javaClass.getMethod(
@@ -267,7 +270,6 @@ class DimMusicManager(private val context: Context) {
             val method = media.javaClass.getMethod("updatePlaybackInfo", infoClass)
             method.invoke(media, infoProxy)
 
-            // Прогресс отдельным вызовом — на части прошивок время идёт через него.
             try {
                 val progMethod = media.javaClass.getMethod(
                     "updateCurrentProgress",
@@ -285,7 +287,6 @@ class DimMusicManager(private val context: Context) {
 
     fun cleanup() {
         stop()
-        // Отписаться от IConnectable, если подключались.
         try {
             val inst = dimInteraction
             if (inst != null) {

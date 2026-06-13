@@ -165,5 +165,21 @@
     <string name="dim_music_test">Проверка вывода</string>
     <string name="dim_music_test_desc">Показать приветственный экран на приборке</string>
     <string name="dim_music_test_btn">Показать на приборке</string>
+    <string name="dim_music_test_read">Проверить текущий трек сейчас</string>
     <string name="dim_music_hint">Данные о треке берутся из системных медиа-сессий — работает с любым плеером (Яндекс.Музыка, Bluetooth, локальный плеер). Нужно разрешение доступа к уведомлениям (Настройки → Доступ к уведомлениям → разрешить для этого приложения). Функция работает только на головном устройстве Livan; в эмуляторе данные не отображаются.</string>
+
+    <!-- Тесты навигации (одиночные манёвры) -->
+    <string name="dim_navi_test_single">Проверка отдельных манёвров</string>
+    <string name="dim_navi_test_single_desc">Отправить один манёвр для сверки стрелки на приборке</string>
+
+    <!-- Отладочный блок (виден в приложении) -->
+    <string name="dim_debug_title">Отладка (для проверки без приборки)</string>
+    <string name="dim_debug_connection">Приборка:</string>
+    <string name="dim_debug_source">Источник данных активен:</string>
+    <string name="dim_debug_session">Активная сессия:</string>
+    <string name="dim_debug_count">Отправлено пакетов:</string>
+    <string name="dim_debug_last">Последние данные:</string>
+    <string name="dim_debug_error">Ошибка:</string>
+    <string name="dim_debug_yes">да</string>
+    <string name="dim_debug_no">нет</string>
 </resources>
