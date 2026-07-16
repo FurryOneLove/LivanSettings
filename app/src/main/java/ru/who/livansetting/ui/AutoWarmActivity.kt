@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -64,13 +65,19 @@ fun AutoWarmScreen(modifier: Modifier = Modifier) {
         
         LazyColumn {
             item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().clickable { driverEnabled = !driverEnabled },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(stringResource(R.string.enable_driver_seat_auto_warm), Modifier.weight(1f))
                     Switch(checked = driverEnabled, onCheckedChange = { driverEnabled = it })
                 }
             }
             item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().clickable { passengerEnabled = !passengerEnabled },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(stringResource(R.string.enable_passenger_seat_auto_warm), Modifier.weight(1f))
                     Switch(checked = passengerEnabled, onCheckedChange = { passengerEnabled = it })
                 }

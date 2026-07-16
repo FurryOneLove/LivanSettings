@@ -94,12 +94,13 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun ButtonSettingCard(title: String, onClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+    ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(text = title, fontSize = 16.sp, modifier = Modifier.weight(1f))
-            IconButton(onClick = onClick) {
-                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
-            }
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
         }
     }
 }
