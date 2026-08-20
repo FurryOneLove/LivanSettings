@@ -8,7 +8,7 @@ import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import java.lang.reflect.Method
 import ru.who.livansetting.core.MediaNotificationListenerService
 import ru.who.livansetting.data.SettingsManager
 
@@ -19,10 +19,19 @@ import ru.who.livansetting.data.SettingsManager
  * медиа-сессии любого играющего приложения (Яндекс.Музыка, BT, локальный
  * плеер) и публикует их через IMediaInteraction.updatePlaybackInfo(IPlaybackInfo).
  *
- * Подключение к приборке — как в системном DimInteractionHelper:
- * если DimInteraction реализует IConnectable, нужно сначала connect() и дождаться
- * onConnected(), только потом getMediaInteraction(). Прямой вызов на таких
- * прошивках бросает исключение.
+ * Как устроено подключение (по разбору AdapterAPIImpl и по логам с машины):
+ *  - DimInteraction.create() строит DimInteractionImpl, тот в конструкторе
+ *    создаёт VehicleSignalManager и android.car.Car, но НЕ подключается;
+ *  - connect() обязателен: без него Car.isConnected() == false,
+ *    getCarPropertyManager() возвращает null, и sendBytesToMcuByPropID
+ *    молча возвращает false, ничего не логируя;
+ *  - подключение асинхронное, и до его завершения нельзя звать
+ *    getMediaInteraction(): конструктор MediaInteractionImpl вызывает
+ *    registerMusicETC() -> CarPropertyManager.registerListener() и падает с NPE;
+ *  - поэтому: connect() -> ждём onConnected() -> getMediaInteraction().
+ *    Плюс страховка: publishCurrent() на каждом тике пробует ensureDim() заново,
+ *    так что даже если колбэк не придёт, привязка случится, как только
+ *    car service поднимется.
  *
  * Доступ к уведомлениям приложение выдаёт себе само через root при старте.
  *
@@ -33,7 +42,13 @@ class DimMusicManager(private val context: Context) {
 
     private var dimInteraction: Any? = null
     private var mediaInteraction: Any? = null
-    private var dimConnected = false
+
+    /** Подключился ли car service. Влияет только на логи и принудительный ресенд. */
+    @Volatile
+    private var carConnected = false
+
+    private var updatePlaybackInfoMethod: Method? = null
+    private var updateSourceTypeMethod: Method? = null
 
     private val settings = SettingsManager(context)
     private val handler = Handler(Looper.getMainLooper())
@@ -44,20 +59,36 @@ class DimMusicManager(private val context: Context) {
     @Volatile
     private var enabled = false
 
-    private var lastUuid: String = ""
-    private var lastSourceType: Int = -1
+    /** Подпись последних отправленных данных — чтобы не гнать одно и то же в CAN. */
+    private var lastSignature: String = ""
+    private var lastSentAt: Long = 0L
+
+    /** true, если приборке уже сказали, что источника нет. */
+    private var clearedOnDim = true
+
+    /** Чтобы не спамить в лог каждую секунду в эмуляторе. */
+    private var unavailableLogged = false
+
+    // Бегущая строка для полей, которые не влезают в окно приборки.
+    private val titleMarquee = DimMarquee(DimMusicData.TITLE_MAX)
+    private val artistMarquee = DimMarquee(DimMusicData.ARTIST_MAX)
+    private val albumMarquee = DimMarquee(DimMusicData.ALBUM_MAX)
+
+    /** connect() и регистрация watcher'а делаются один раз. */
+    private var connectRequested = false
 
     private val periodicRunnable = object : Runnable {
         override fun run() {
             if (!enabled) return
             publishCurrent()
-            handler.postDelayed(this, 1000)
+            handler.postDelayed(this, TICK_MS)
         }
     }
 
     fun start() {
+        FileLog.init(context)
         if (!settings.isDimMusicEnabled()) {
-            Log.d(TAG, "DIM music disabled in settings — not starting")
+            FileLog.d(TAG, "DIM music disabled in settings — not starting")
             return
         }
         if (enabled) return
@@ -66,21 +97,19 @@ class DimMusicManager(private val context: Context) {
         try {
             NotificationAccessHelper.grant(context)
         } catch (e: Exception) {
-            Log.w(TAG, "notification access grant error", e)
+            FileLog.w(TAG, "notification access grant error", e)
         }
 
-        if (!createMediaInteraction()) {
-            Log.w(TAG, "MediaInteraction not ready yet (connecting or unavailable)")
-        }
+        ensureDim()
         handler.post(periodicRunnable)
-        Log.i(TAG, "DimMusicManager started")
+        FileLog.i(TAG, "DimMusicManager started")
     }
 
     fun stop() {
         if (!enabled) return
         enabled = false
         handler.removeCallbacks(periodicRunnable)
-        Log.i(TAG, "DimMusicManager stopped")
+        FileLog.i(TAG, "DimMusicManager stopped")
     }
 
     fun applyEnabledState() {
@@ -89,120 +118,221 @@ class DimMusicManager(private val context: Context) {
 
     fun isEnabled(): Boolean = enabled
 
-    private fun createMediaInteraction(): Boolean {
-        if (dimConnected && mediaInteraction != null) return true
+    // ---------- подключение ----------
+
+    /**
+     * Создаёт DimInteraction, инициирует connect() и сразу берёт
+     * IMediaInteraction. Повторные вызовы безопасны.
+     */
+    private fun ensureDim(): Boolean {
+        if (mediaInteraction != null) return true
         return try {
             val clazz = Class.forName("com.ecarx.xui.adaptapi.diminteraction.DimInteraction")
-            val instance = dimInteraction ?: run {
-                val createMethod = clazz.getMethod("create", Context::class.java)
-                createMethod.invoke(null, context)
-            }
+
+            val instance = dimInteraction ?: clazz
+                .getMethod("create", Context::class.java)
+                .invoke(null, context)
+
             if (instance == null) {
-                Log.w(TAG, "DimInteraction.create() returned null")
+                FileLog.w(TAG, "DimInteraction.create() returned null")
                 return false
             }
             dimInteraction = instance
 
-            val isConnectable = isIConnectable(instance)
-            if (android.os.Build.VERSION.SDK_INT >= 26 && isConnectable) {
-                tryConnectViaIConnectable(instance, clazz)
-                if (mediaInteraction == null) {
-                    return false
-                }
-                dimConnected = true
-                return true
+            // connect() обязателен — иначе CarPropertyManager будет null.
+            registerWatcherAndConnect(instance)
+
+            // ВАЖНО: getMediaInteraction() дёргать до подключения нельзя.
+            // Конструктор MediaInteractionImpl вызывает registerMusicETC(), а тот —
+            // CarPropertyManager.registerListener() на ещё пустой ссылке -> NPE.
+            // Подключение асинхронное, поэтому ждём onConnected и пробуем на следующем тике.
+            if (connectRequested && !carConnected) {
+                FileLog.d(TAG, "waiting for car service before getMediaInteraction()")
+                return false
             }
 
-            bindMediaInteraction(instance, clazz)
-            dimConnected
+            mediaInteraction = clazz.getMethod("getMediaInteraction").invoke(instance)
+            if (mediaInteraction == null) {
+                FileLog.w(TAG, "getMediaInteraction() returned null")
+                return false
+            }
+
+            cacheMethods()
+            declareSourceTypeList()
+            FileLog.i(TAG, "MediaInteraction ready (carConnected=$carConnected)")
+            true
         } catch (e: ClassNotFoundException) {
-            Log.w(TAG, "eCarX DimInteraction classes not available (emulator mode)")
+            if (!unavailableLogged) {
+                unavailableLogged = true
+                FileLog.w(TAG, "eCarX DimInteraction classes not available (emulator mode)")
+            }
             false
         } catch (e: Exception) {
-            Log.e(TAG, "createMediaInteraction error", e)
+            FileLog.e(TAG, "ensureDim error", e)
             false
         }
     }
 
-    private fun isIConnectable(instance: Any): Boolean {
-        return try {
-            Class.forName("com.ecarx.xui.adaptapi.binder.IConnectable").isInstance(instance)
-        } catch (e: Exception) {
-            false
-        }
-    }
+    private fun registerWatcherAndConnect(instance: Any) {
+        if (connectRequested) return
+        try {
+            val connectableClass = Class.forName("com.ecarx.xui.adaptapi.binder.IConnectable")
+            if (!connectableClass.isInstance(instance)) {
+                FileLog.w(TAG, "DimInteraction is not IConnectable — connect() пропущен")
+                return
+            }
 
-    private fun bindMediaInteraction(instance: Any, clazz: Class<*>) {
-        val mediaMethod = clazz.getMethod("getMediaInteraction")
-        mediaInteraction = mediaMethod.invoke(instance)
-        dimConnected = mediaInteraction != null
-    }
-
-    private fun tryConnectViaIConnectable(instance: Any, dimClazz: Class<*>): Boolean {
-        return try {
-            if (android.os.Build.VERSION.SDK_INT < 26) return false
-            val connectableClass =
-                Class.forName("com.ecarx.xui.adaptapi.binder.IConnectable")
-            if (!connectableClass.isInstance(instance)) return false
-
-            val watcherClass = Class.forName(
-                "com.ecarx.xui.adaptapi.binder.IConnectable\$IConnectWatcher"
-            )
+            val watcherClass =
+                Class.forName("com.ecarx.xui.adaptapi.binder.IConnectable\$IConnectWatcher")
             val watcher = java.lang.reflect.Proxy.newProxyInstance(
                 watcherClass.classLoader,
                 arrayOf(watcherClass)
             ) { _, method, _ ->
                 when (method.name) {
                     "onConnected" -> {
-                        try {
-                            bindMediaInteraction(instance, dimClazz)
-                            Log.i(TAG, "IConnectable onConnected — media bound")
-                        } catch (e: Exception) {
-                            Log.e(TAG, "bind after onConnected failed", e)
-                        }
-                        null
+                        carConnected = true
+                        // Заставляем отправить заново: до подключения всё уходило в никуда.
+                        lastSignature = ""
+                        clearedOnDim = false
+                        FileLog.i(TAG, "car service connected — will resend")
+                        // Привязываемся сразу, не дожидаясь очередного тика.
+                        handler.post { if (enabled) ensureDim() }
                     }
                     "onDisConnected" -> {
-                        dimConnected = false
-                        null
+                        carConnected = false
+                        FileLog.w(TAG, "car service disconnected")
                     }
-                    else -> null
                 }
+                null
             }
 
-            val registerMethod =
-                connectableClass.getMethod("registerConnectWatcher", watcherClass)
-            registerMethod.invoke(instance, watcher)
-            val connectMethod = connectableClass.getMethod("connect")
-            connectMethod.invoke(instance)
-            Log.i(TAG, "IConnectable.connect() called")
-            true
-        } catch (e: ClassNotFoundException) {
-            false
+            connectableClass.getMethod("registerConnectWatcher", watcherClass)
+                .invoke(instance, watcher)
+            connectableClass.getMethod("connect").invoke(instance)
+            connectRequested = true
+            FileLog.i(TAG, "IConnectable.connect() called")
         } catch (e: Exception) {
-            Log.w(TAG, "IConnectable path failed", e)
-            false
+            FileLog.w(TAG, "connect() failed", e)
         }
     }
 
-    private fun publishCurrent() {
-        if (!dimConnected || mediaInteraction == null) {
-            createMediaInteraction()
+    private fun cacheMethods() {
+        val media = mediaInteraction ?: return
+        updatePlaybackInfoMethod = media.javaClass.methods.firstOrNull {
+            it.name == "updatePlaybackInfo" && it.parameterTypes.size == 1
         }
+        updateSourceTypeMethod = media.javaClass.methods.firstOrNull {
+            it.name == "updateCurrentSourceType" && it.parameterTypes.size == 1
+        }
+        if (updatePlaybackInfoMethod == null) {
+            FileLog.w(TAG, "updatePlaybackInfo не найден в ${media.javaClass.name}")
+        }
+    }
 
-        val controller = findActiveSession() ?: return
-        val data = buildData(controller)
+    /**
+     * Сообщает приборке, какие типы источников мы умеем отдавать.
+     * Значение попадает в битовую маску кадра 0x07:
+     * 1->0x04, 2->0x40, 3->0x01, 4->0x02, 6->0x10, 7->0x08, 8->0x20;
+     * типы 0 и 5 в маске не представлены (дадут 0).
+     * Объявляем ровно тот тип, который реально публикуем.
+     */
+    private fun declareSourceTypeList() {
+        val media = mediaInteraction ?: return
+        try {
+            media.javaClass
+                .getMethod("updateMediaSourceTypeList", IntArray::class.java)
+                .invoke(media, intArrayOf(DimMusicData.SOURCE_TYPE_ONLINE))
+            FileLog.i(TAG, "source type list declared: [${DimMusicData.SOURCE_TYPE_ONLINE}]")
+        } catch (e: NoSuchMethodException) {
+            FileLog.w(TAG, "updateMediaSourceTypeList not available on this firmware")
+        } catch (e: Exception) {
+            FileLog.w(TAG, "declareSourceTypeList failed", e)
+        }
+    }
 
-        if (data.uuid == lastUuid && data.playbackStatus != DimMusicData.STATUS_PLAYING) {
+    // ---------- публикация ----------
+
+    private fun publishCurrent() {
+        if (mediaInteraction == null && !ensureDim()) return
+
+        val controller = findActiveSession()
+
+        if (controller == null) {
+            clearDim()
             return
         }
-        lastUuid = data.uuid
-        publish(data)
+
+        val raw = buildData(controller)
+        val signature = raw.signature()
+        val now = android.os.SystemClock.elapsedRealtime()
+        val changed = signature != lastSignature
+
+        titleMarquee.setText(raw.title)
+        artistMarquee.setText(raw.artist)
+        albumMarquee.setText(raw.album)
+        if (changed) {
+            titleMarquee.rewind()
+            artistMarquee.rewind()
+            albumMarquee.rewind()
+        }
+
+        // Крутим только пока играет. На паузе замираем: иначе при длительной
+        // остановке кадры уходили бы в CAN бесконечно без всякой пользы.
+        val animating = raw.playbackStatus == DimMusicData.STATUS_PLAYING &&
+            (titleMarquee.scrolling || artistMarquee.scrolling || albumMarquee.scrolling)
+
+        val keepAliveDue = now - lastSentAt >= KEEP_ALIVE_MS
+        if (!changed && !animating && !keepAliveDue) return
+
+        // Шаг бегущей строки делаем только когда содержимое не менялось:
+        // новый трек всегда показываем с начала.
+        if (!changed && animating) {
+            titleMarquee.advance()
+            artistMarquee.advance()
+            albumMarquee.advance()
+        }
+
+        val data = raw.copy(
+            title = titleMarquee.current(),
+            artist = artistMarquee.current(),
+            album = albumMarquee.current()
+        )
+
+        if (publish(data)) {
+            lastSignature = signature
+            lastSentAt = now
+            clearedOnDim = false
+            if (changed) {
+                FileLog.d(TAG, "published: ${data.limitedTitle()} / ${data.limitedArtist()}")
+            }
+        }
+    }
+
+    /**
+     * Гасит блок музыки на приборке. Работает только через
+     * updateCurrentSourceType(-1): все остальные значения этот метод игнорирует
+     * (в прошивке стоит `if (sourceType != -1) return`).
+     */
+    private fun clearDim() {
+        if (clearedOnDim) return
+        val media = mediaInteraction ?: return
+        try {
+            updateSourceTypeMethod?.invoke(media, DimMusicData.SOURCE_TYPE_DISCONNECT)
+            clearedOnDim = true
+            lastSignature = ""
+            lastSentAt = 0L
+            titleMarquee.rewind()
+            artistMarquee.rewind()
+            albumMarquee.rewind()
+            FileLog.d(TAG, "no active session — source cleared (-1)")
+        } catch (e: Exception) {
+            FileLog.w(TAG, "clearDim failed", e)
+        }
     }
 
     private fun findActiveSession(): MediaController? {
         if (MediaNotificationListenerService.getInstance() == null) {
-            Log.d(TAG, "NotificationListener not running")
+            FileLog.d(TAG, "NotificationListener not running")
             return null
         }
         return try {
@@ -218,10 +348,10 @@ class DimMusicManager(private val context: Context) {
                 }
                 ?: sessions[0]
         } catch (e: SecurityException) {
-            Log.w(TAG, "No access to media sessions (notification permission?)", e)
+            FileLog.w(TAG, "No access to media sessions (notification permission?)", e)
             null
         } catch (e: Exception) {
-            Log.e(TAG, "findActiveSession error", e)
+            FileLog.e(TAG, "findActiveSession error", e)
             null
         }
     }
@@ -242,48 +372,27 @@ class DimMusicManager(private val context: Context) {
             data.playbackStatus = if (state.state == PlaybackState.STATE_PLAYING)
                 DimMusicData.STATUS_PLAYING else DimMusicData.STATUS_PAUSED
         }
+        // Любой тип, кроме радийных (3/4/0x21/0x22), уходит в музыкальную ветку.
+        // 6 (ONLINE) — верно по смыслу и вызывает updateMediaPlayInfo один раз,
+        // тогда как 0/1/7 из-за fall-through в switch отправляют кадр дважды.
         data.sourceType = DimMusicData.SOURCE_TYPE_ONLINE
-        data.uuid = "${controller.packageName}|${data.title}|${data.artist}|${data.playbackStatus}"
+        data.uuid = "${controller.packageName}|${data.title}|${data.artist}"
         return data
     }
 
-    private fun publish(data: DimMusicData) {
-        val media = mediaInteraction ?: return
-        if (!dimConnected) return
-        try {
-            if (lastSourceType != data.sourceType) {
-                try {
-                    val stMethod = media.javaClass.getMethod(
-                        "updateCurrentSourceType",
-                        Int::class.javaPrimitiveType
-                    )
-                    stMethod.invoke(media, data.sourceType)
-                    lastSourceType = data.sourceType
-                } catch (_: NoSuchMethodException) {
-                }
-            }
-
-            val infoProxy = DimPlaybackInfo.createProxy(data)
-            val infoClass = Class.forName(
-                "com.ecarx.xui.adaptapi.diminteraction.IMediaInteraction\$IPlaybackInfo"
-            )
-            val method = media.javaClass.getMethod("updatePlaybackInfo", infoClass)
-            method.invoke(media, infoProxy)
-
-            try {
-                val progMethod = media.javaClass.getMethod(
-                    "updateCurrentProgress",
-                    Long::class.javaPrimitiveType
-                )
-                progMethod.invoke(media, data.positionMs)
-            } catch (_: NoSuchMethodException) {
-            }
-
-            Log.d(TAG, "published music: ${data.limitedTitle()} / ${data.limitedArtist()}")
+    private fun publish(data: DimMusicData): Boolean {
+        val media = mediaInteraction ?: return false
+        val method = updatePlaybackInfoMethod ?: return false
+        return try {
+            method.invoke(media, DimPlaybackInfo.createProxy(data))
+            true
         } catch (e: Exception) {
-            Log.e(TAG, "publish error", e)
+            FileLog.e(TAG, "publish error", e)
+            false
         }
     }
+
+    // ---------- завершение ----------
 
     fun cleanup() {
         stop()
@@ -293,6 +402,7 @@ class DimMusicManager(private val context: Context) {
                 val connectableClass =
                     Class.forName("com.ecarx.xui.adaptapi.binder.IConnectable")
                 if (connectableClass.isInstance(inst)) {
+                    connectableClass.getMethod("disconnect").invoke(inst)
                     connectableClass.getMethod("unregisterConnectWatcher").invoke(inst)
                 }
             }
@@ -300,11 +410,31 @@ class DimMusicManager(private val context: Context) {
         }
         mediaInteraction = null
         dimInteraction = null
-        dimConnected = false
-        lastSourceType = -1
+        updatePlaybackInfoMethod = null
+        updateSourceTypeMethod = null
+        carConnected = false
+        connectRequested = false
+        unavailableLogged = false
+        lastSignature = ""
+        lastSentAt = 0L
+        clearedOnDim = true
     }
 
     companion object {
         private const val TAG = "DimMusicManager"
+
+        /**
+         * Период опроса MediaSession. Он же — шаг бегущей строки:
+         * один символ за такт. 700 мс — примерно 1.4 символа в секунду,
+         * читаемо и не заваливает шину кадрами.
+         */
+        private const val TICK_MS = 700L
+
+        /**
+         * Повторная отправка неизменившихся данных. Нужна, чтобы приборка
+         * подхватила состояние после своей перезагрузки или позднего
+         * подключения car service. Чаще слать смысла нет — это трафик на CAN.
+         */
+        private const val KEEP_ALIVE_MS = 10_000L
     }
 }

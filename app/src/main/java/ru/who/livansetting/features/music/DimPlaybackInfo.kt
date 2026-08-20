@@ -1,6 +1,5 @@
 package ru.who.livansetting.features.music
 
-import android.util.Log
 import java.lang.reflect.Proxy
 
 /**
@@ -12,13 +11,18 @@ import java.lang.reflect.Proxy
  * (как и для навигации), чтобы проект собирался без системного SDK и не падал
  * в эмуляторе.
  *
- * Сопоставление геттеров (по IMediaInteraction.IPlaybackInfo):
- *   getTitle / getArtist / getAlbum  -> данные трека (с лимитами длины)
- *   getPlaybackStatus                -> 1 играет / 0 пауза
- *   getDuration                      -> длительность, мс
- *   getSourceType                    -> тип источника
- *   getUUID                          -> идентификатор для дедупликации
- *   остальные (лирика, радио, обложки, очередь) -> пустые значения
+ * ДИАГНОСТИКА: при [verbose] = true каждый вызов геттера пишется в FileLog.
+ * Так видно главное — опрашивает ли приборка наш объект вообще. Если после
+ * updatePlaybackInfo в логе нет ни одной строки «PI ->», значит DIM данные
+ * не забирает, и дело не в содержимом, а в самом подключении источника.
+ *
+ * Что из этих геттеров реально доезжает до CAN (проверено по AdapterAPIImpl):
+ *   getSourceType      -> выбор ветки (музыка/радио/ничего) и младший нибл
+ *                         первого байта каждого блока кадра 0x01
+ *   getTitle/Artist/Album -> текст кадра 0x01, UTF-16LE, до 31 символа каждый
+ *   getPlaybackStatus  -> кадр 0x07 (convertMusicStatus2IPK)
+ *   getUUID/getArtwork -> только broadcast обложки, на текст не влияют
+ *   остальные          -> не используются, но интерфейс требует их реализовать
  */
 object DimPlaybackInfo {
 
@@ -26,14 +30,18 @@ object DimPlaybackInfo {
     private const val INTERFACE =
         "com.ecarx.xui.adaptapi.diminteraction.IMediaInteraction\$IPlaybackInfo"
 
+    /** Включается кнопкой «Геттеры» в окне лога. */
+    @Volatile
+    var verbose: Boolean = false
+
     fun createProxy(data: DimMusicData): Any {
         val infoClass = Class.forName(INTERFACE)
 
         return Proxy.newProxyInstance(
             infoClass.classLoader,
             arrayOf(infoClass)
-        ) { proxy, method, _ ->
-            when (method.name) {
+        ) { proxy, method, args ->
+            val result: Any? = when (method.name) {
                 "getTitle" -> data.limitedTitle()
                 "getArtist" -> data.limitedArtist()
                 "getAlbum" -> data.limitedAlbum()
@@ -41,10 +49,12 @@ object DimPlaybackInfo {
                 "getDuration" -> data.durationMs
                 "getSourceType" -> data.sourceType
                 "getUUID" -> data.uuid
-                "getCurrentLyricSentence" -> null
+                // Ниже — заглушки. Строки возвращаем пустыми, а не null:
+                // AdaptAPI местами склеивает их в StringBuilder и сравнивает.
+                "getCurrentLyricSentence" -> ""
                 "getLyricContent" -> ""
                 "getRadioStationName" -> ""
-                "getRadioFrequency" -> null
+                "getRadioFrequency" -> ""
                 "getRadioMode" -> 0
                 "getLoopMode" -> 0
                 "getFavoriteState" -> 0
@@ -55,20 +65,34 @@ object DimPlaybackInfo {
                 "getMediaPath" -> null
                 "getLyric" -> null
                 "hashCode" -> System.identityHashCode(proxy)
-                "equals" -> proxy === null
+                "equals" -> proxy === args?.getOrNull(0)
                 "toString" -> "DimPlaybackInfo($data)"
                 else -> {
-                    Log.d(TAG, "Unhandled getter: ${method.name}")
+                    // Неизвестный геттер — раньше уходило в Log.d и терялось.
+                    FileLog.w(TAG, "неизвестный геттер: ${method.name} : ${method.returnType.simpleName}")
                     defaultFor(method.returnType)
                 }
             }
+
+            if (verbose && method.name != "hashCode" && method.name != "toString") {
+                FileLog.raw("    PI -> ${method.name}() = ${short(result)}")
+            }
+            result
         }
+    }
+
+    private fun short(v: Any?): String {
+        val s = v?.toString() ?: "null"
+        return if (s.length > 60) s.take(60) + "…" else s
     }
 
     private fun defaultFor(type: Class<*>): Any? = when (type) {
         Int::class.javaPrimitiveType -> 0
         Long::class.javaPrimitiveType -> 0L
         Boolean::class.javaPrimitiveType -> false
+        Float::class.javaPrimitiveType -> 0f
+        Double::class.javaPrimitiveType -> 0.0
+        String::class.java -> ""
         else -> null
     }
 }
